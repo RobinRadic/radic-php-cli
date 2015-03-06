@@ -50,6 +50,7 @@ sed -i "s/VERSION/$NEW_TAG/g" newmanifest.json
 
 mv -f newmanifest.json gh-pages/manifest.json
 cp -f radic.phar "gh-pages/radic-$NEW_TAG.phar"
+rm -f newmanifest.json
 
 echo "comitting gh pages"
 
