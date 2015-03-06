@@ -7,11 +7,12 @@ require __DIR__.'/../boot.php';
 use Symfony\Component\Console\Application;
 
 $application = new Application('RadicGitter', '0.0.1');
-foreach(radic()->files()->listContents('src/commands') as $file)
+
+foreach(radic()->files()->listContents('src/Commands') as $file)
 {
-    radic()->dump($file);
+    if($file['filename'] === 'Command') continue;
+    $className = '\Radic\Commands\\' . $file['filename'];
+    $application->add(new $className);
 }
-
-
 
 $application->run();
