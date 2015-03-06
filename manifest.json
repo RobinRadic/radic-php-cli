@@ -1,8 +1,8 @@
 [
     {
         "name": "radic.phar",
-        "sha1": "2303c53d7cf99972cdbd15840cb35c76435eeca8",
-        "url": "http://robinradic.github.io/radic-php-cli/downloads/radic-0.0.7.phar",
-        "version": "0.0.7"
+        "sha1": "1698960aa52a14802f6f48192f92b4528bf6b281",
+        "url": "http://robinradic.github.io/radic-php-cli/downloads/radic-0.0.8.phar",
+        "version": "0.0.8"
     }
 ]
