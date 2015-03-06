@@ -34,15 +34,6 @@ class App extends Container
     }
 
     /**
-     * Local project files
-     * @return \League\Flysystem\Filesystem
-     */
-    public function files()
-    {
-        return $this->make('files');
-    }
-
-    /**
      * @return \Illuminate\Filesystem\Filesystem
      */
     public function fs()
@@ -80,7 +71,7 @@ class App extends Container
     {
         $args = func_get_args();
 
-        $bindedPaths = ['base', 'app', 'bin', 'vendor', 'home'];
+        $bindedPaths = ['base', 'app', 'bin', 'vendor', 'home', 'storage'];
 
         if ( in_array($args[0], $bindedPaths) )
         {
@@ -89,5 +80,10 @@ class App extends Container
         }
 
         return Path::join($args);
+    }
+
+    public function getVersion()
+    {
+        return '0.0.1';
     }
 }

@@ -2,16 +2,16 @@
 <?php
 
 require __DIR__.'/../vendor/autoload.php';
-require __DIR__.'/../boot.php';
+require __DIR__.'/../src/boot.php';
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('RadicGitter', '0.0.1');
+$application = new Application('RadicGitter', '@package_version@');
 
-foreach(radic()->files()->listContents('src/Commands') as $file)
+foreach(scandir(__DIR__ . '/../src/Commands') as $file)
 {
-    if($file['filename'] === 'Command') continue;
-    $className = '\Radic\Commands\\' . $file['filename'];
+    if(! str_contains($file, '.php') or $file === 'Command.php') continue;
+    $className = '\Radic\Commands\\' . str_replace('.php', '', $file);
     $application->add(new $className);
 }
 
