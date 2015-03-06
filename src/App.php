@@ -84,6 +84,6 @@ class App extends Container
 
     public function getVersion()
     {
-        return '0.0.1';
+        return file_get_contents(__DIR__ . '/VERSION');
     }
 }
