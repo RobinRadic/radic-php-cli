@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+# can alternatively be done with
+# https://github.com/cpliakas/manifest-publisher
+
+
     TAG_LAST="$(git describe --abbrev=0 --tags)"
     TAG_PATCH="$(git describe --abbrev=0 --tags | cut -f 3 -d .)"
     TAG_MINOR="$(git describe --abbrev=0 --tags | cut -f 2 -d .)"
@@ -35,13 +40,16 @@
     git push -u origin ${NEW_TAG}
 
 echo "removing old phar"
-
 rm radic.phar
 box build
 
-echo "writing new phar to gh pages"
+
 chmod +x radic.phar
 
+echo "copying to /usr/local/bin/radic for local use"
+sudo cp -f radic.phar /usr/local/bin/radic
+
+echo "writing new phar to gh pages"
 SHA=$(openssl sha1 radic.phar)
 SHA=$(echo "$SHA" | sed -e "s/SHA1(radic.phar)= //g")
 
@@ -53,7 +61,9 @@ cp -f radic.phar "gh-pages/radic-$NEW_TAG.phar"
 rm -f newmanifest.json
 
 echo "comitting gh pages"
+cd gh-pages
+git add -A
+git commit -m "New version ${NEW_TAG}"
+git push -u origin gh-pages
 
-echo "copying to /usr/local/bin/radic for local use"
-sudo cp -f radic.phar /usr/local/bin/radic
-
+echo "All done"
