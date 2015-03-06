@@ -15,8 +15,15 @@ class UpdateCommand extends Command
 
     public function fire()
     {
-        $manager = new Manager(Manifest::loadFile(self::MANIFEST_FILE));
+        $mf = json_decode(file_get_contents(self::MANIFEST_FILE), true);
 
+        $this->info('Attempting to update');
+        $this->comment('Current version is: ' . $this->style('cyan', radic()->getVersion()));
+        $this->comment('Newest version is: ' . $this->style('cyan', $mf[0]['version']));
+
+        $manager = new Manager(Manifest::loadFile(self::MANIFEST_FILE));
         $manager->update($this->getApplication()->getVersion(), true);
+
+        $this->info('All done sire!');
     }
 }
