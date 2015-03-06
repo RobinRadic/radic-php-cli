@@ -34,14 +34,25 @@
     git tag -a ${NEW_TAG} -m "Tagged: ${NEW_TAG} @ ${NOW}"
     git push -u origin ${NEW_TAG}
 
+echo "removing old phar"
 
 rm radic.phar
 box build
+
+echo "writing new phar to gh pages"
 chmod +x radic.phar
 
 SHA=$(openssl sha1 radic.phar)
 SHA=$(echo "$SHA" | sed -e "s/SHA1(radic.phar)= //g")
 
+sed "s/SHA/$SHA/g" manifest.json > newmanifest.json
+sed -i "s/VERSION/$NEW_TAG/g" newmanifest.json
+
+mv -f newmanifest.json gh-pages/manifest.json
+cp -f radic.phar "gh-pages/radic-$NEW_TAG.phar"
+
+echo "comitting gh pages"
+
+echo "copying to /usr/local/bin/radic for local use"
 sudo cp -f radic.phar /usr/local/bin/radic
 
-echo "$SHA"
