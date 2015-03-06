@@ -6,7 +6,7 @@ require __DIR__.'/../src/boot.php';
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('RadicGitter', radic()->getVersion());
+$application = new Application('Radic CLI', radic()->getVersion());
 
 foreach(scandir(__DIR__ . '/../src/Commands') as $file)
 {

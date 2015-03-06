@@ -16,6 +16,7 @@ class UpdateCommand extends Command
     public function fire()
     {
         $manager = new Manager(Manifest::loadFile(self::MANIFEST_FILE));
+
         $manager->update($this->getApplication()->getVersion(), true);
     }
 }
