@@ -1,0 +1,19 @@
+{
+  "name": "radic/radic",
+  "authors": [
+    {
+      "name": "robinradic",
+      "email": "robin@radic.nl"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Radic\\": "src/"
+    }
+  },
+  "require": {
+    "symfony/console": "~2.6",
+    "knplabs/github-api": "~1.4",
+    "herrera-io/phar-update": "~2.0"
+  }
+}
