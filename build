@@ -48,18 +48,24 @@ box build
 chmod +x radic.phar
 
 echo "copying to /usr/local/bin/radic for local use"
-sudo cp -f radic.phar /usr/local/bin/radic
+#sudo cp -f radic.phar /usr/local/bin/radic
+
+
 
 echo "writing new phar to gh pages"
+
+# make manifest
 SHA=$(openssl sha1 radic.phar)
 SHA=$(echo "$SHA" | sed -e "s/SHA1(radic.phar)= //g")
-
 sed "s/SHA/$SHA/g" manifest.json > newmanifest.json
 sed -i "s/VERSION/$NEW_TAG/g" newmanifest.json
-
 mv -f newmanifest.json gh-pages/manifest.json
-cp -f radic.phar "gh-pages/downloads/radic-$NEW_TAG.phar"
 rm -f newmanifest.json
+
+# copy phar to gh pages download
+cp -f radic.phar "gh-pages/downloads/radic-$NEW_TAG.phar"
+cp -f radic.phar "gh-pages/downloads/radic.phar"
+
 
 echo "comitting gh pages"
 cd gh-pages
