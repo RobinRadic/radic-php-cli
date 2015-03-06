@@ -1,0 +1,4 @@
+#!/bin/bash
+box build
+chmod +x radic.phar
+sudo mv -f radic.phar /usr/local/bin/radic

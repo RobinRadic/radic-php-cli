@@ -4,3 +4,4 @@ box.json
 private.key
 radic.phar.pubkey
 /.idea
+/config.php
