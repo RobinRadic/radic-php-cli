@@ -12,7 +12,7 @@ class DumpCommand extends Command
 
     public function fire()
     {
-        \Radic\App::getInstance()->dumpSelf();
+        radic()->dumpSelf();
     }
     /**
      * Get the console command options.
