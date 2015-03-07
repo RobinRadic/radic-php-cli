@@ -23,7 +23,13 @@ function start()
 
     $app->singleton('github', function ($app)
     {
-        return new Github\Client();
+        $client = new \Github\Client(
+            new \Github\HttpClient\CachedHttpClient(array('cache_dir' => $app['path.storage'] . '/tmp/github-api-cache'))
+        );
+
+        $client->authenticate($app['config']->get('github.token'), \Github\Client::AUTH_URL_TOKEN);
+
+        return $client;
     });
 
 

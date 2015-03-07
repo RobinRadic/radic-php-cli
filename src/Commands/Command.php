@@ -6,6 +6,7 @@ namespace Radic\Commands;
 
 
 use Illuminate\Console\Command as BaseCommand;
+use Illuminate\Support\Arr;
 use JakubOnderka\PhpConsoleColor\ConsoleColor;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,8 +45,10 @@ abstract class Command extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $method = method_exists($this, 'handle') ? 'handle' : 'fire';
-
-        return $this->fire();
+        radic()->events()->fire('command.firing', $this->name);
+        $fire = $this->fire();
+        radic()->events()->fire('command.fired', $this->name);
+        return $fire;
     }
 
     protected function style($styles, $str)
@@ -56,5 +59,18 @@ abstract class Command extends BaseCommand
     protected function dump($var)
     {
         $this->getApplication()->dump($var);
+    }
+
+    protected function arrayTable($arr)
+    {
+
+        $rows = [];
+        foreach($arr as $key=>$val){
+            if(is_array($val)){
+                $val = print_r(array_slice($val, 0, 5), true);
+            }
+            $rows[] = [(string)$key, (string)$val];
+        }
+        $this->table(['Key', 'Value'], $rows);
     }
 }

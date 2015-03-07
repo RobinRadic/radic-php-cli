@@ -23,6 +23,7 @@
         "jakub-onderka/php-console-color": "0.1.*",
         "illuminate/console": "~5.0",
         "webmozart/path-util": "~1.0",
-        "illuminate/filesystem": "~5.0"
+        "illuminate/filesystem": "~5.0",
+        "wp-cli/php-cli-tools": "0.10.*"
     }
 }
