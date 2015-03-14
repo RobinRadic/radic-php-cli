@@ -9,6 +9,7 @@ use Herrera\Phar\Update\Manifest;
 use Illuminate\Support\Arr;
 class UpdateCommand extends Command
 {
+    protected $requireSudo = true;
     protected $name = 'update';
     protected $description = 'Update Radic CLI to the latest version';
     const MANIFEST_FILE = 'http://robinradic.github.io/radic-php-cli/manifest.json';
