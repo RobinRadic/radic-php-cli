@@ -16,10 +16,10 @@ class GitShowCommand extends Command
 
     public function fire()
     {
-        #$this->dump(radic()->github()->me()->show());
-        $cg = radic()->config()->get('github');
+        #$this->dump(radic()->github->me()->show());
+        $cg = radic()->config->get('github');
         $u = $cg['username'];
-        $g = radic()->github();
+        $g = radic()->github;
         $w = $this->argument('what');
         $d = [];
 

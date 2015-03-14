@@ -22,7 +22,7 @@ class ConfigUnsetCommand extends Command
             $key = $this->ask('What do you want to set?');
         }
 
-        radic()->config()->del($key)->save();
+        radic()->config->del($key)->save();
 
         $this->info('Config ' . $key . ' has been unset');
 

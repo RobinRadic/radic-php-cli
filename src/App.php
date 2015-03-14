@@ -15,9 +15,19 @@ use Symfony\Component\VarDumper\VarDumper;
  * @license     MIT
  * @copyright   2011-2015, Robin Radic
  * @link        http://radic.mit-license.org
+ *
+ * @property-read \Illuminate\Filesystem\Filesystem $fs filesystem funcs
+ * @property-read \Illuminate\Contracts\Cache\Store $cache caching store
+ * @property-read \Github\Client $github the github stuff
+ * @property-read \Illuminate\Events\Dispatcher $events the event dispatcher
+ * @property-read \Illuminate\Log\Writer $log log writer
+ * @property-read \Radic\Config $config configuration repo
+ * @property-read \Radic\Stub $stub stubber
+ *
  */
 class App extends Container
 {
+
 
     public function dumpSelf()
     {
@@ -31,46 +41,6 @@ class App extends Container
         VarDumper::dump($var);
 
         return $this;
-    }
-
-    /**
-     * @return \Illuminate\Filesystem\Filesystem
-     */
-    public function fs()
-    {
-        return $this->make('fs');
-    }
-
-    /**
-     * @return \Radic\Config
-     */
-    public function config()
-    {
-        return $this->make('config');
-    }
-
-    /**
-     * This will return events
-     *
-     * @return \Illuminate\Events\Dispatcher
-     */
-    public function events()
-    {
-        return $this->make('events');
-    }
-
-    /**
-     * @return \Github\Client
-     */
-    public function github()
-    {
-        return $this->make('github');
-    }
-
-    /** @return \Illuminate\Contracts\Cache\Store */
-    public function cache()
-    {
-        return $this->make('cache.store');
     }
 
     public function path()
@@ -99,8 +69,24 @@ class App extends Container
         $root = (@file_put_contents($path, '1') === false ? false : true);
         if($root !== false)
         {
-            radic()->fs()->delete($path);
+            radic()->fs->delete($path);
         }
         return $root;
+    }
+
+    protected function getEncryptionKey()
+    {
+        return md5($this['path.storage'] . gethostname());
+    }
+
+    public function encrypt($str)
+    {
+        return @openssl_encrypt($str, 'AES-256-CBC', $this->getEncryptionKey() );
+    }
+
+    public function decrypt($str)
+    {
+
+        return @openssl_decrypt($str, 'AES-256-CBC', $this->getEncryptionKey());
     }
 }

@@ -15,7 +15,7 @@ class ConfigShowCommand extends Command
        # $this->dump($config);
 
         $rows = [];
-        foreach(Arr::dot(radic()->config()->all()) as $key => $val){
+        foreach(Arr::dot(radic()->config->all()) as $key => $val){
             if(is_bool($val))
             {
                 $val = $val === true ? $this->style('green', 'true') : $this->style('red', 'false');

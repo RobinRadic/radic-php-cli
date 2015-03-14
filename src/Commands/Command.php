@@ -45,9 +45,10 @@ abstract class Command extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $method = method_exists($this, 'handle') ? 'handle' : 'fire';
-        radic()->events()->fire('command.firing', $this->name);
+        #radic()->
+        radic()->events->fire('command.firing', $this->name);
         $fire = $this->fire();
-        radic()->events()->fire('command.fired', $this->name);
+        radic()->events->fire('command.fired', $this->name);
         return $fire;
     }
 

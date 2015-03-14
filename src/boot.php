@@ -2,6 +2,10 @@
 
 use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\MemcachedConnector;
+use Illuminate\Log\Writer;
+
+use Monolog\Logger as Monolog;
+use Radic\Stub;
 
 function start()
 {
@@ -18,8 +22,15 @@ function start()
     /* EVENTS */
     //
     $app->singleton('events', 'Illuminate\Events\Dispatcher');
-
     $app['events']->fire('booting');
+
+    //
+    /* LOGGING */
+    //
+    $app->instance('log', $log = new Writer(
+        new Monolog('local'), $app['events'])
+    );
+    $log->useFiles($app['path.storage'].'/main.log');
 
     //
     /* CONFIG */
@@ -40,18 +51,27 @@ function start()
     //
     /* CACHE */
     //
-    $app->singleton('cache', function($app)
+    $app->singleton('cache.manager', function($app)
     {
         return new CacheManager($app);
     });
-    $app->singleton('cache.store', function($app)
+    $app->singleton('cache', function($app)
     {
-        return $app['cache']->driver();
+        return $app['cache.manager']->driver();
     });
     $app->singleton('memcached.connector', function()
     {
         return new MemcachedConnector;
     });
+
+    //
+    /* STUBS */
+    //
+    $app->singleton('stub', function($app)
+    {
+        return new Stub();
+    });
+
 
     //
     /* GITHUB */
@@ -72,6 +92,7 @@ function start()
     #var_dump($app);
     define('RADIC_BOOTED', true);
     $app['events']->fire('booted');
+    $app['log']->info('booted');
     return $app;
 }
 

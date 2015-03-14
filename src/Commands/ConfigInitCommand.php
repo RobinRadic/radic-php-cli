@@ -14,19 +14,23 @@ class ConfigInitCommand extends Command
 
     protected $requiredConfig = [
         'github.token'    => 'Github oauth token',
-        'github.username' => 'Github username'
+        'github.username' => 'Github username',
+        'user.name' => 'Your name',
+        'user.last_name' => 'Your last name',
+        'user.email' => 'Your email'
     ];
 
     public function fire()
     {
-        $isConfigured = radic()->config()->get('configured', false);
+
+        $isConfigured = radic()->config->get('configured', false);
         $config       = [];
         foreach ($this->requiredConfig as $key => $desc)
         {
             $default = null;
             if ( $isConfigured )
             {
-                $default = radic()->config()->get($key, null);
+                $default = radic()->config->get($key, null);
             }
             #$this->dump(['default' => $default, 'co' => $isConfigured]);
             $config[$key] = $this->ask(
@@ -35,8 +39,9 @@ class ConfigInitCommand extends Command
                 (is_null($default) ? '' : " [$default]"), $default);
         }
 
-        radic()->config()
-            ->set(radic()->config()->getDefaults())
+
+        radic()->config
+            ->set(radic()->config->getDefaults())
             ->set($config)
             ->set('configured', true)
             ->save();

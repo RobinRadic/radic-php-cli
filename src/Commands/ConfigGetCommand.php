@@ -19,7 +19,7 @@ class ConfigGetCommand extends Command
         {
             $args['key'] = $this->ask('What key/path do you want to show? (leave empty if you want to show all)');
         }
-        $val = radic()->config()->get($args['key']);
+        $val = radic()->config->get($args['key']);
 
         $this->info('Showing ' . $this->style(['bold', 'yellow'], $args['key']));
         $this->dump($val);

@@ -28,9 +28,9 @@ class GitRepoCommand extends Command
 
     public function fire()
     {
-        $this->gh       = radic()->github();
-        $this->repo     = radic()->github()->repo();
-        $this->username = radic()->config()->get('github.username');
+        $this->gh       = radic()->github;
+        $this->repo     = radic()->github->repo();
+        $this->username = radic()->config->get('github.username');
 
         $args = $this->argument();
 

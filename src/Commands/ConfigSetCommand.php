@@ -29,7 +29,7 @@ class ConfigSetCommand extends Command
         }
 
 
-        radic()->config()->set($args['key'], $args['value'])->save();
+        radic()->config->set($args['key'], $args['value'])->save();
 
         $this->info('Config ' . $args['key'] . ' has been set and saved');
 
