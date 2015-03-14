@@ -67,6 +67,12 @@ class App extends Container
         return $this->make('github');
     }
 
+    /** @return \Illuminate\Contracts\Cache\Store */
+    public function cache()
+    {
+        return $this->make('cache.store');
+    }
+
     public function path()
     {
         $args = func_get_args();

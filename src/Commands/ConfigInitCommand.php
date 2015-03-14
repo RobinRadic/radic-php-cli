@@ -7,22 +7,39 @@ namespace Radic\Commands;
 
 class ConfigInitCommand extends Command
 {
+
     protected $name = 'config:init';
+
     protected $description = 'Initialize a new config file and start a wizard to set the minimal required values';
 
     protected $requiredConfig = [
-        'github.token' => 'Github oauth token',
+        'github.token'    => 'Github oauth token',
         'github.username' => 'Github username'
     ];
 
     public function fire()
     {
-        $config = [];
-        foreach($this->requiredConfig as $key => $desc){
-            $config[$key] = $this->ask($this->style(['bg_black', 'green'], $key) . ' (' . $desc . '):');
+        $isConfigured = radic()->config()->get('configured', false);
+        $config       = [];
+        foreach ($this->requiredConfig as $key => $desc)
+        {
+            $default = null;
+            if ( $isConfigured )
+            {
+                $default = radic()->config()->get($key, null);
+            }
+            #$this->dump(['default' => $default, 'co' => $isConfigured]);
+            $config[$key] = $this->ask(
+                $this->style(['bg_black', 'green'], $key) .
+                $this->style('bg_black', ' (' . $desc . '):') .
+                (is_null($default) ? '' : " [$default]"), $default);
         }
 
-        radic()->config()->set($config)->set('configured', true)->save();
+        radic()->config()
+            ->set(radic()->config()->getDefaults())
+            ->set($config)
+            ->set('configured', true)
+            ->save();
 
         $this->info('All set and done sire!');
     }

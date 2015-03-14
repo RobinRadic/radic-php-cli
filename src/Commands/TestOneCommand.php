@@ -5,6 +5,7 @@
 namespace Radic\Commands;
 
 
+use Illuminate\Support\Arr;
 class TestOneCommand extends Command
 {
 
@@ -26,6 +27,8 @@ class TestOneCommand extends Command
             'argv' => $GLOBALS['argv'],
             'super user permissions' => radic()->hasRootAccess()
         ]);
+
+        $this->dump(Arr::dot(radic()->config()->all()));
 
     }
 }
