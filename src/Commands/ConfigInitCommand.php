@@ -17,7 +17,9 @@ class ConfigInitCommand extends Command
         'github.username' => 'Github username',
         'user.name' => 'Your name',
         'user.last_name' => 'Your last name',
-        'user.email' => 'Your email'
+        'user.email' => 'Your email',
+        'user.url' => 'Your website',
+        'license.url' => 'Url to license (MIT)'
     ];
 
     public function fire()

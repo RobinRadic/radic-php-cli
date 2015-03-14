@@ -62,6 +62,18 @@ abstract class Command extends BaseCommand
         $this->getApplication()->dump($var);
     }
 
+    public function select($question, array $choices, $default = null, $attempts = null, $multiple = null){
+
+        $choice = $this->choice($question, $choices, $default, $attempts, $multiple);
+        foreach ($choices as $k => $v)
+        {
+            if ( $choice === $v )
+            {
+                return $k;
+            }
+        }
+    }
+
     protected function arrayTable($arr)
     {
 

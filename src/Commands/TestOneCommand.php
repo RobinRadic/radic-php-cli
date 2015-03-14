@@ -34,7 +34,8 @@ class TestOneCommand extends Command
             'super user permissions' => radic()->hasRootAccess()
         ]);
 
-        radic()->stub->copy('.editorconfig');
+        radic()->stub->copy('LICENSE');
+        #$this->dump(radic()->stub->getValues());
         #$this->dump(Arr::dot(radic()->config()->all()));
 
     }

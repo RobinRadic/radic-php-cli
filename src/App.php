@@ -58,6 +58,11 @@ class App extends Container
         return Path::join($args);
     }
 
+    public function sh($commando)
+    {
+        return new \mikehaertl\shellcommand\Command($commando);
+    }
+
     public function getVersion()
     {
         return file_get_contents(__DIR__ . '/VERSION');

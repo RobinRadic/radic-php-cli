@@ -24,7 +24,7 @@ class Config extends Repository
     {
         $this->configFilePath = radic()->path('storage', 'config.php');
 
-        if ( ! radic()->fs->exists($this->configFilePath) )
+        if ( ! radic()->fs->exists($this->configFilePath) and ! radic()->hasRootAccess())
         {
             radic()->fs->put($this->configFilePath, radic()->encrypt("<?php \n return " . var_export(array('configured' => false), true) . ';'));
         }
@@ -83,7 +83,10 @@ class Config extends Repository
      */
     public function save()
     {
-        radic()->fs->put($this->configFilePath, radic()->encrypt("<?php \n return " . var_export($this->items, true) . ';'));
+        if(!radic()->hasRootAccess())
+        {
+            radic()->fs->put($this->configFilePath, radic()->encrypt("<?php \n return " . var_export($this->items, true) . ';'));
+        }
         return $this;
     }
 
