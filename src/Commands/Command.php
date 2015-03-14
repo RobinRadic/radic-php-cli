@@ -48,7 +48,7 @@ abstract class Command extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $method = method_exists($this, 'handle') ? 'handle' : 'fire';
-        if ( ! $this->allowSudo and radic()->hasRootAccess() )
+        if ( ! $this->allowSudo and ! $this->requireSudo and radic()->hasRootAccess() )
         {
             $this->error('Cannot execute this command with root privileges');
             exit;
