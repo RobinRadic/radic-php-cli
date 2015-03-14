@@ -21,6 +21,11 @@ class UpdateCommand extends Command
         $this->comment('Current version is: ' . $this->style('cyan', radic()->getVersion()));
         $this->comment('Newest version is: ' . $this->style('cyan', $mf[0]['version']));
 
+        if( PHP_OS === 'Linux' and ! radic()->hasRootAccess() )
+        {
+            $this->error('Update requires super user permissions');
+        }
+
         $manager = new Manager(Manifest::loadFile(self::MANIFEST_FILE));
         $manager->update($this->getApplication()->getVersion(), true);
 

@@ -22,7 +22,10 @@ class TestOneCommand extends Command
             'pid' => getmypid(),
             'dirname FILE' => dirname(__FILE__),
             'cwd' => getcwd(),
-            'user' => get_current_user()
+            'user' => get_current_user(),
+            'argv' => $GLOBALS['argv'],
+            'super user permissions' => radic()->hasRootAccess()
         ]);
+
     }
 }

@@ -86,4 +86,15 @@ class App extends Container
     {
         return file_get_contents(__DIR__ . '/VERSION');
     }
+
+    public function hasRootAccess()
+    {
+        $path = '/root/.' . md5('_radic-cli-perm-test' . time());
+        $root = (@file_put_contents($path, '1') === false ? false : true);
+        if($root !== false)
+        {
+            radic()->fs()->delete($path);
+        }
+        return $root;
+    }
 }
