@@ -42,8 +42,8 @@ function start()
     //
     /* FILESYSTEM */
     //
-    $app->bindIf('fs', 'Illuminate\Filesystem\Filesystem');
-
+    $app->bindIf('files', 'Radic\Filesystem');
+    $app->bind('fs', 'files');
     if(!$app['fs']->exists($app['path.storage'])){
         $app['fs']->makeDirectory($app['path.storage'], 0777, true);
     }

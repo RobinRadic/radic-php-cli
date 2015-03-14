@@ -23,28 +23,38 @@ class Stub
      * @var string
      */
     protected $openDelimiter = '{';
+
     /**
      * @var string
      */
     protected $closeDelimiter = '}';
+
     /**
      * @var array
      */
     protected $values = array();
+
     /**
      * Instanciates the class
      */
     public function __construct()
     {
         $this->values = [
-            'date.year' => date("Y"),
+            'date.year'  => date("Y"),
             'date.month' => date("m"),
-            'date.day' => date("d"),
+            'date.day'   => date("d"),
         ];
 
         $this->setVar(Arr::dot(radic()->config->all(), 'config.'));
     }
 
+    /**
+     * Copies a parsed stub file to the directory
+     *
+     * @param       $file
+     * @param null  $to
+     * @param array $values
+     */
     public function copy($file, $to = null, array $values = [])
     {
         if ( is_array($file) )
@@ -71,24 +81,41 @@ class Stub
         }
     }
 
-
+    /**
+     * Parses a string and replaces the keys with values
+     *
+     * @param       $str
+     * @param array $values
+     * @return mixed
+     */
     public function parse($str, array $values = [])
     {
         $keys = array();
 
         $values = array_merge($this->values, $values);
 
-        foreach ($values as $key => $value) {
+        foreach ($values as $key => $value)
+        {
             $keys[] = $this->openDelimiter . $key . $this->closeDelimiter;
         }
+
         return str_replace($keys, $values, $str);
     }
 
-    public function setVar(array $values, $merge = TRUE)
+    /**
+     * Merges an array with values
+     *
+     * @param array $values
+     * @param bool  $merge
+     */
+    public function setVar(array $values, $merge = true)
     {
-        if (!$merge || empty($this->values)) {
+        if ( ! $merge || empty($this->values) )
+        {
             $this->values = $values;
-        } else {
+        }
+        else
+        {
             $this->values = array_merge($this->values, $values);
         }
     }
@@ -100,6 +127,4 @@ class Stub
     {
         return $this->values;
     }
-
-
 }

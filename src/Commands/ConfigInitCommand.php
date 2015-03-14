@@ -10,7 +10,7 @@ class ConfigInitCommand extends Command
 
     protected $name = 'config:init';
 
-    protected $description = 'Initialize a new config file and start a wizard to set the minimal required values';
+    protected $description = 'Create a new config file and interactively set the minimal required values';
 
     protected $requiredConfig = [
         'github.token'    => 'Github oauth token',

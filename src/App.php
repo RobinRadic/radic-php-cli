@@ -16,7 +16,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @copyright   2011-2015, Robin Radic
  * @link        http://radic.mit-license.org
  *
- * @property-read \Illuminate\Filesystem\Filesystem $fs filesystem funcs
+ * @property-read \Radic\Filesystem $fs filesystem funcs
  * @property-read \Illuminate\Contracts\Cache\Store $cache caching store
  * @property-read \Github\Client $github the github stuff
  * @property-read \Illuminate\Events\Dispatcher $events the event dispatcher
