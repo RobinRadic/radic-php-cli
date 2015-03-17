@@ -23,6 +23,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property-read \Illuminate\Log\Writer $log log writer
  * @property-read \Radic\Config $config configuration repo
  * @property-read \Radic\Stub $stub stubber
+ * @property-read \Radic\Google\Client $google stubber
  *
  */
 class App extends Container

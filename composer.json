@@ -27,6 +27,7 @@
         "wp-cli/php-cli-tools": "0.10.*",
         "mikehaertl/php-shellcommand": "1.0.*",
         "illuminate/cache": "~5.0",
-        "illuminate/log": "~5.0"
+        "illuminate/log": "~5.0",
+        "google/apiclient": "1.1.2"
     }
 }

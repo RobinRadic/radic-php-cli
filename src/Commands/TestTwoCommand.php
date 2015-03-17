@@ -7,6 +7,7 @@ namespace Radic\Commands;
 
 use Illuminate\Support\Arr;
 use Radic\Path;
+
 class TestTwoCommand extends Command
 {
 
@@ -18,14 +19,28 @@ class TestTwoCommand extends Command
 
     public function fire()
     {
-        #$fd = inotify_init();
-        $path = radic()->path(getcwd(), '*');
-        $this->dump($path);
-       # $paths = radic()->fs->rglob($path);
-        $paths = radic()->fs->rsearch(getcwd(), '/.*(?:\.md|\.h)/');
-        $this->dump($paths);
-        #inotify_add_watch($fd, radic()->fs->glob())
+        $client = new \Google_Client();
+        $client->setApplicationName('radic-cli-' . gethostname());
 
+        $user_to_impersonate = 'robinradic30@gmail.com';
+        $cred = new \Google_Auth_AssertionCredentials(
+            '',
+            'https://www.google.com/m8/feeds',
+            radic()->fs->get(radic()->path('storage', 'p12')),
+            'notasecret',                                 // Default P12 password
+            'http://oauth.net/grant_type/jwt/1.0/bearer', // Default grant type
+            $user_to_impersonate
+        );
+
+        $client->setAssertionCredentials($cred);
+        if($client->getAuth()->isAccessTokenExpired())
+        {
+            $client->getAuth()->refreshTokenWithAssertion();
+        }
+
+        $result = $client->getAuth()->authenticatedRequest(new \Google_Http_Request('/m8/feeds/contacts/default/full'));
+
+        $this->dump($result);
 
     }
 }

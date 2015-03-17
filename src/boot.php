@@ -88,6 +88,19 @@ function start()
     });
 
 
+    //
+    /* GOOGLE */
+    //
+    $app->singleton('google', function ($app)
+    {
+        $client = new Radic\Google\Client();
+
+        #$client->authenticate($app['config']->get('github.token'), \Github\Client::AUTH_URL_TOKEN);
+
+        return $client;
+    });
+
+
 
     #var_dump($app);
     define('RADIC_BOOTED', true);
