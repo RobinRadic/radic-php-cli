@@ -6,13 +6,20 @@ require __DIR__.'/../src/boot.php';
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('Radic CLI', radic()->getVersion());
-
-foreach(scandir(__DIR__ . '/../src/Commands') as $file)
+if(!defined('RADIC_AS_LIB'))
 {
-    if(! str_contains($file, '.php') or $file === 'Command.php') continue;
-    $className = '\Radic\Commands\\' . str_replace('.php', '', $file);
-    $application->add(new $className);
-}
 
-$application->run();
+    $application = new Application('Radic CLI', radic()->getVersion());
+
+    foreach (scandir(__DIR__ . '/../src/Commands') as $file)
+    {
+        if ( ! str_contains($file, '.php') or $file === 'Command.php' )
+        {
+            continue;
+        }
+        $className = '\Radic\Commands\\' . str_replace('.php', '', $file);
+        $application->add(new $className);
+    }
+
+    $application->run();
+}

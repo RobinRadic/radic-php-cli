@@ -28,6 +28,7 @@
         "mikehaertl/php-shellcommand": "1.0.*",
         "illuminate/cache": "~5.0",
         "illuminate/log": "~5.0",
-        "google/apiclient": "1.1.2"
+        "google/apiclient": "1.1.2",
+        "illuminate/http": "~5.0"
     }
 }

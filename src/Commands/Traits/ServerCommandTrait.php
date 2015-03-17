@@ -43,8 +43,6 @@ trait ServerCommandTrait
         $routerFilePath = $this->getServerRouterFilePath();
         chdir(storage_path());
         $exec = exec("screen -dmS radic-php-server php -S {$host}:{$port} $routerFilePath");
-        #var_dump($exec);
-
     }
 
     protected function stopServer()
