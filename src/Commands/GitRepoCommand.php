@@ -74,12 +74,11 @@ class GitRepoCommand extends Command
 
     protected function actionCreate()
     {
-        #$this->info('create');
+        $owner = $this->ask('Repository owner', $this->username);
         $name = $this->argument('name') or $this->ask('Name of repository');
-        #$description = $this->ask('Description (optional)', '');
         try
         {
-            $this->repo->create($name, "");
+            $this->repo->create($name, "", "", true, $owner);
         } catch (\Github\Exception\RuntimeException $e)
         {
             $this->error($e->getMessage());

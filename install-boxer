@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+curl -LSs https://box-project.github.io/box2/installer.php | php
+chmod +x box.phar
+sudo mv -f box.phar /usr/local/bin/box
+
+echo "box moved to /usr/local/bin. You can now globally call box command"
