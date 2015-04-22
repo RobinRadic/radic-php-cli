@@ -186,7 +186,7 @@ abstract class Command extends BaseCommand
         $question = $this->style([ 'bg_light_gray', 'dark_gray', 'bold' ], " $question ");
         if ( isset($default) )
         {
-            $question .= $this->style([ 'bg_dark_gray', 'light_gray'], " [$default] ");
+            $question .= $this->style(['bg_dark_gray', 'light_gray'], " $default ");
         }
 
         return parent::ask($question, $default);

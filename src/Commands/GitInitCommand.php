@@ -47,7 +47,7 @@ class GitInitCommand extends Command
 
         if ( $opts[ 'remote' ] != 'no' )
         {
-            $opts[ 'owner' ]      = $this->ask('Owner name [' . $this->username . ']');
+            $opts[ 'owner' ]      = $this->ask('Owner name', $this->username);
             $opts[ 'repository' ] = $this->ask('Repository name');
             $opts[ 'push' ]       = $this->confirm('create .gitignore', true);
         }
