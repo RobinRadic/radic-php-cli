@@ -3,6 +3,50 @@
 
 # can alternatively be done with
 # https://github.com/cpliakas/manifest-publisher
+NO_OPTS=1
+MYDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source "${MYDIR}/lib/bash/_lib.sh"
+
+is_verbose="false"
+is_debug="false"
+is_help="false"
+flag_type="patch"
+
+while getopts "t:hvd" flag; do
+  case "${flag}" in
+    t) flag_type="${OPTARG}" ;;
+    h) is_help="true" ;;
+    d) is_debug="true" ;;
+    v) is_verbose="true" ;;
+    *) echo "Invalid option: -$OPTARG" >&2 ;;
+  esac
+done
+
+if [ "$is_help" == "true" ]; then
+    cat << EOF
+$(f bold)$(fc green)Radic CLI deployment script$(f off)
+
+$(f bold)Description:     $(f off)
+$(f dim)- Creates a new git tag & pushes it to remote.
+- Creates radic.phar & moves it to /usr/local/bin/radic.
+- Updates manifest.json and the updates/pushes the gh-pages to allow client-side updates
+$(f off)
+$(f bold)Arguments:     $(f off)
+    -h          $(fc orange)(optional)$(f off) Show this help overview
+    -v          $(fc orange)(optional)$(f off) Enable verbose output
+    -d          $(fc orange)(optional)$(f off) Enable debug output
+    -t <type>   $(fc orange)(optional)$(f off) Change bump type, accepts: patch, minor or major. Default: patch
+
+$(f bold)Examples:      $(f off)
+$(fc orange)Execute script using defaults $(f off):
+\$ ./dist
+
+$(fc orange)Execute bumping version major $(f off):
+\$ ./dist -t major
+
+EOF
+    exit 0
+fi
 
 
 TAG_LAST="$(git describe --abbrev=0 --tags)"
@@ -10,67 +54,56 @@ TAG_PATCH="$(git describe --abbrev=0 --tags | cut -f 3 -d .)"
 TAG_MINOR="$(git describe --abbrev=0 --tags | cut -f 2 -d .)"
 TAG_MAJOR="$(git describe --abbrev=0 --tags | cut -f 1 -d . | sed -e 's/v//g')"
 
-ARG1="$1"
+flag_type="$flag_type"
 
-if [ -z "$ARG1" ]; then
-    ARG1="patch"
-fi
-
-if [ "$ARG1" = "patch" ]; then
+if [ "$flag_type" = "patch" ]; then
     NEW_TAG="${TAG_MAJOR}.${TAG_MINOR}.$((TAG_PATCH+1))"
-elif [ "$ARG1" = "minor" ]; then
+elif [ "$flag_type" = "minor" ]; then
     NEW_TAG="${TAG_MAJOR}.$(($TAG_MINOR+1)).0"
-elif [ "$ARG1" = "major" ]; then
+elif [ "$flag_type" = "major" ]; then
     NEW_TAG="$(($TAG_MAJOR+1)).0.0"
-elif [ "$ARG1" = "debug-remove-all-danger" ]; then
+elif [ "$flag_type" = "debug-remove-all-danger" ]; then
     git tag | while read line ; do git tag -d ${line}; git push -u origin :refs/tags/${line}; done
     exit 0
 else
-    echo "Failed. Specify version bump type. Usage: './tag.sh [patch|minor|major]'"
+    Echo fatal "Failed. Specify version bump type. Usage: './tag.sh [patch|minor|major]'"
     exit 1
 fi
 
+
+Echo "Tagging new version: $(fc green)${NEW_TAG}$(fc off)"
 echo -n "${NEW_TAG}" > src/VERSION
-
-git add -A
+Exec git add -A
 NOW=$(date +"%d-%m-%Y %T")
-git commit -m "Tagging ${NEW_TAG}"
-git push -u origin master
-
-git tag -a ${NEW_TAG} -m "Tagged: ${NEW_TAG} @ ${NOW}"
-git push -u origin ${NEW_TAG}
-
-echo "removing old phar"
-rm radic.phar
-box build
+Exec `git commit -m "Tagging ${NEW_TAG}"`
+Exec git push -u origin master
+Exec git tag -a ${NEW_TAG} -m "Tagged: ${NEW_TAG} @ ${NOW}"
+Exec git push -u origin ${NEW_TAG}
 
 
-chmod +x radic.phar
+Echo "Creating PHAR archive"
+rm radic.phar > /dev/null 2>&1
+Exec box build
+Exec chmod +x radic.phar
+Exec sudo cp -f radic.phar /usr/local/bin/radic
 
-echo "copying to /usr/local/bin/radic for local use"
-#sudo cp -f radic.phar /usr/local/bin/radic
 
-
-
-echo "writing new phar to gh pages"
-
-# make manifest
+Echo "Writing to manifest.json"
 SHA=$(openssl sha1 radic.phar)
 SHA=$(echo "$SHA" | sed -e "s/SHA1(radic.phar)= //g")
-sed "s/SHA/$SHA/g" manifest.json > newmanifest.json
+"s/SHA/$SHA/g" manifest.json > newmanifest.json
 sed -i "s/VERSION/$NEW_TAG/g" newmanifest.json
-mv -f newmanifest.json gh-pages/manifest.json
-rm -f newmanifest.json
-
-# copy phar to gh pages download
-cp -f radic.phar "gh-pages/downloads/radic-$NEW_TAG.phar"
-cp -f radic.phar "gh-pages/downloads/radic.phar"
+Exec mv -f newmanifest.json gh-pages/manifest.json
+Exec rm -f newmanifest.json
 
 
-echo "comitting gh pages"
+Echo "Updating gh-pages"
+Exec cp -f radic.phar "gh-pages/downloads/radic-$NEW_TAG.phar"
+Exec cp -f radic.phar "gh-pages/downloads/radic.phar"
+
 cd gh-pages
-git add -A
-git commit -m "New version ${NEW_TAG}"
-git push -u origin gh-pages
+Exec git add -A
+Exec git commit -m "New version ${NEW_TAG}"
+Exec git push -u origin gh-pages
 
-echo "All done"
+Echo success "All done sire!"

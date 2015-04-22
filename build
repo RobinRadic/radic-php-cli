@@ -1,8 +1,20 @@
 #!/bin/bash
 
-rm radic.phar
-box build
-chmod +x radic.phar
-sudo cp -f radic.phar /usr/local/bin/radic
+MYDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source "${MYDIR}/lib/bash/_lib.sh"
 
-echo "All done"
+Echo "Building radic.phar"
+
+Echo verbose "Removing old radic.phar"
+rm radic.phar > /dev/null 2>&1
+
+Echo verbose "Executing box build"
+Exec box build
+
+Echo verbose "Changing permissions for radic.phar"
+Exec chmod +x radic.phar
+
+Echo verbose "Moving radic.phar to /usr/local/bin/radic"
+Exec sudo cp -f radic.phar /usr/local/bin/radic
+
+Echo success "All done sire!"

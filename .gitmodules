@@ -1,0 +1,4 @@
+[submodule "lib/bash"]
+	path = lib/bash
+	url = https://github.com/robinradic/radic-bash-lib
+	branch = master
