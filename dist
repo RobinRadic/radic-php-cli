@@ -77,7 +77,7 @@ Exec git add -A
 NOW=$(date +"%d-%m-%Y %T")
 git commit -m "Tagging ${NEW_TAG}"
 Exec git push -u origin master
-Exec git tag -a ${NEW_TAG} -m "Tagged: ${NEW_TAG} @ ${NOW}"
+Exec `git tag -a ${NEW_TAG} -m "Tagged: ${NEW_TAG} @ ${NOW}"`
 Exec git push -u origin ${NEW_TAG}
 
 
