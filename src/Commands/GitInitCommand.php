@@ -74,9 +74,9 @@ class GitInitCommand extends Command
         }
         if ( $opts[ 'remote' ] != "no" )
         {
-            $remoteUrl   = 'https://' . $this->username . ':' . $this->secret(
-                    'git pass'
-                ) . '@github.com/' . $this->username . '/' . $opts[ 'repository' ];
+            $remoteUrl   =
+                'https://' . $this->username . ':' . $this->secret('git pass') .
+                '@github.com/' . $opts['owner'] . '/' . $opts[ 'repository' ];
             $commands[ ] = 'git remote add origin ' . $remoteUrl;
 
             if ( $opts[ 'remote' ] == 'add' )
