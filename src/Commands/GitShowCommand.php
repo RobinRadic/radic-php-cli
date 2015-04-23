@@ -23,6 +23,8 @@ class GitShowCommand extends Command
         $w = $this->argument('what');
         $d = [];
 
+        $this->info('Getting result..');
+
         switch ($w)
         {
             case 'me': $d = $g->me()->show(); break;

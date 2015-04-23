@@ -2,10 +2,8 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Commands;
+namespace Radic\Console;
 
-
-use cli\notify\Spinner;
 use Illuminate\Console\Command as BaseCommand;
 use JakubOnderka\PhpConsoleColor\ConsoleColor;
 use Symfony\Component\Console\Input\InputInterface;
@@ -193,4 +191,7 @@ abstract class Command extends BaseCommand
         return parent::ask($question, $default);
     }
 
+    public function dots($message)
+    {
+    }
 }
