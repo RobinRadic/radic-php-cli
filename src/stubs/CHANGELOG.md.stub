@@ -1,0 +1,16 @@
+<a name="top"></a>Changelog
+======================
+
+### Versions
+@foreach($tags as $tag)
+- [{{ $tag['version'] }}]({{ $repoUrl }}/tree/v2.1.0) - {{ $tag['message'] }}
+@endforeach
+
+-----------
+
+### Commits
+@foreach($commits as $commit)
+- [{{ $commit['date'] }}]({{ $repoUrl }}/commit/{{ $commit['ref'] }}) - {{ $commit['message'] }}
+@endforeach
+
+-----------
