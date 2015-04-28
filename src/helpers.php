@@ -14,6 +14,19 @@ if ( ! function_exists('radic') )
 }
 
 
+if ( ! function_exists('path_join') )
+{
+    /**
+     * @param string $paths,... the paths
+     * @return string;
+     */
+    function path_join()
+    {
+        return \Radic\Path::join(func_get_args());
+    }
+}
+
+
 function storage_path(){
     return radic('path.storage');
 }

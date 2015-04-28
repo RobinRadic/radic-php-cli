@@ -7,6 +7,7 @@ use Illuminate\Log\Writer;
 use Monolog\Logger as Monolog;
 use Radic\Path;
 use Radic\Stub;
+use Radic\Stubs;
 
 function start()
 {
@@ -78,6 +79,10 @@ function start()
     $app->singleton('stub', function($app)
     {
         return new Stub();
+    });
+    $app->singleton('stubs', function($app)
+    {
+        return new Stubs($app->fs, $app->view);
     });
 
 

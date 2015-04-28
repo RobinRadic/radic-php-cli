@@ -32,8 +32,13 @@ class MakeChangelogCommand extends Command
             }
         }
 
-        $view = radic()->blade->view()->make('test')->with(['yes' => true, 'content' => 'testContent'])->render();
-        print $view;
+        #$view = radic()->blade->view()->make('test')->with(['yes' => true, 'content' => 'testContent'])->render();
+        #print $view;
+
+        radic()->stubs
+            #->from(__DIR__ . '/../stubs')
+            ->to(getcwd())
+            ->generate(['test.stub' => false]);
 
         exec('git tag -l -n10'); // 2>&1', $tagLog, $return);
     }

@@ -186,6 +186,8 @@ class Blade
 
         $env->addExtension('stub', 'blade');
 
+        $this->app->instance('view', $env);
+
         return $env;
     }
 
