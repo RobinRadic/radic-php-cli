@@ -7,6 +7,7 @@ namespace Radic\Commands;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
+
 class GitRepoCommand extends Command
 {
 
@@ -41,16 +42,16 @@ class GitRepoCommand extends Command
             'show'   => 'Show a repository'
         ];
 
-        if ( isset($args['action']) && in_array($args['action'], array_keys($choices)) )
+        if ( isset($args[ 'action' ]) && in_array($args[ 'action' ], array_keys($choices)) )
         {
-            $do = $args['action'];
+            $do = $args[ 'action' ];
         }
         else
         {
             $choice = $this->choice('What do you want to do?', $choices);
 
             $do = 'list';
-            foreach ($choices as $k => $v)
+            foreach ( $choices as $k => $v )
             {
                 if ( $choice === $v )
                 {
@@ -67,8 +68,8 @@ class GitRepoCommand extends Command
     protected function getArguments()
     {
         return array(
-            array('action', InputArgument::OPTIONAL, 'The action you want to perform [create|list|remove|show]'),
-            array('name', InputArgument::OPTIONAL, 'The name of the repository you want to perform the action on')
+            array( 'action', InputArgument::OPTIONAL, 'The action you want to perform [create|list|remove|show]' ),
+            array( 'name', InputArgument::OPTIONAL, 'The name of the repository you want to perform the action on' )
         );
     }
 
@@ -79,7 +80,8 @@ class GitRepoCommand extends Command
         try
         {
             $this->repo->create($name, "", "", true, $owner);
-        } catch (\Github\Exception\RuntimeException $e)
+        }
+        catch (\Github\Exception\RuntimeException $e)
         {
             $this->error($e->getMessage());
         }
@@ -91,17 +93,17 @@ class GitRepoCommand extends Command
         #$this->info('Listing repositories');
         $repos  = $this->gh->api('user')->repositories($this->username);
         $search = $this->argument('name');
-        $d      = [];
-        foreach ($repos as $i => $repo)
+        $d      = [ ];
+        foreach ( $repos as $i => $repo )
         {
             if ( isset($search) )
             {
-                if ( ! Str::contains($repo['name'], $search) and ! Str::contains($repo['description'], $search) )
+                if ( ! Str::contains($repo[ 'name' ], $search) and ! Str::contains($repo[ 'description' ], $search) )
                 {
                     continue;
                 }
             }
-            $d[$repo['name']] = Str::limit($repo['description'], 30);
+            $d[ $repo[ 'name' ] ] = Str::limit($repo[ 'description' ], 30);
         }
         $this->arrayTable($d);
     }
@@ -109,12 +111,12 @@ class GitRepoCommand extends Command
     protected function pickRepo($question = 'pick repository')
     {
         $_repos  = $this->gh->api('user')->repositories($this->username);
-        $repos   = [];
-        $choices = [];
-        foreach ($_repos as $i => $repo)
+        $repos   = [ ];
+        $choices = [ ];
+        foreach ( $_repos as $i => $repo )
         {
-            $choices[$repo['name']] = $repo['name'];
-            $repos[$repo['name']]   = $repo;
+            $choices[ $repo[ 'name' ] ] = $repo[ 'name' ];
+            $repos[ $repo[ 'name' ] ]   = $repo;
         }
 
         $name = $this->argument('name');
@@ -126,7 +128,7 @@ class GitRepoCommand extends Command
     {
         $choice = $this->pickRepo();
         #$this->dump($choice);
-        if ( $this->confirm('Are you absolutely sure you want to remove ' . $this->style(['bg_light_red', 'white', 'bold'], " $choice "), false) )
+        if ( $this->confirm('Are you absolutely sure you want to remove ' . $this->style([ 'bg_light_red', 'white', 'bold' ], " $choice "), false) )
         {
             if ( $this->confirm('Really?', true) )
             {
@@ -134,7 +136,8 @@ class GitRepoCommand extends Command
                 {
                     $this->gh->repo()->remove($this->username, $choice);
                     $this->info('Removed repository');
-                } catch (\Github\Exception\RuntimeException $e)
+                }
+                catch (\Github\Exception\RuntimeException $e)
                 {
                     $this->error($e->getMessage());
                 }
@@ -152,7 +155,8 @@ class GitRepoCommand extends Command
         {
             $repo = $this->gh->repo()->show($this->username, $choice);
             $this->arrayTable($repo);
-        } catch (\Github\Exception\RuntimeException $e)
+        }
+        catch (\Github\Exception\RuntimeException $e)
         {
             $this->error($e->getMessage());
         }

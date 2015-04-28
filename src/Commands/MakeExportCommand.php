@@ -39,7 +39,6 @@ class MakeExportCommand extends Command
             );
         }
 
-        $this->dump($files);
         $this->info('All done sire!');
     }
 }

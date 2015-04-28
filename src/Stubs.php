@@ -62,18 +62,11 @@ class Stubs
 
     public function generate(array $files, array $values = [ ])
     {
-        $package = 'ewr';
-        $files2  = [
-            'composer.dev.json.stub'                    => 'composer.dev.json',
-            'composer.json.stub'                        => 'composer.json',
-            'gitignore.stub'                            => '.gitignore',
-            'phpunit.xml.stub'                          => 'phpunit.xml',
-            'travis.yml.stub'                           => 'travis.yml',
-            'resources/config/config.stub'              => false,
-            'src/Providers/ConsoleServiceProvider.stub' => 'ConsoleServiceProvider.php',
-            'src/PackageServiceProvider.stub'           => ucfirst($package) . 'ServiceProvider.php',
-            'src/Console/ListCommand.stub'              => ucfirst($package) . 'ListCommand.php'
-        ];
+        if(!$this->isExported())
+        {
+            return;
+        }
+
         foreach ( $files as $src => $fileName )
         {
             $segments    = explode('/', $src);
@@ -89,18 +82,9 @@ class Stubs
             }
             $destinationPath = path_join($destinationDir, $fileName);
 
-            # if from not set, we get it from the stubs dir, either in the phar or in the user dir
             if ( $this->from === false )
             {
-                $userStubDir = path_join(storage_path(), 'stubs');
-                if ( $this->fs->exists($userStubDir) )
-                {
-                    $this->from = $userStubDir;
-                }
-                else
-                {
-                    $this->from = __DIR__ . '/stubs';
-                }
+                $this->from = $this->getStubDir();
             }
 
             $src = path_join($this->from, $src);
@@ -121,6 +105,16 @@ class Stubs
             ->file($filePath)
             ->with(array_replace_recursive($this->attributes, $values))
             ->render();
+    }
+
+    public function isExported()
+    {
+        return $this->fs->exists($this->getStubDir());
+    }
+
+    public function getStubDir()
+    {
+        return path_join(storage_path(), 'stubs');
     }
 
     protected function mkdir()
