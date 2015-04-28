@@ -5,6 +5,7 @@ use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Log\Writer;
 
 use Monolog\Logger as Monolog;
+use Radic\Path;
 use Radic\Stub;
 
 function start()
@@ -36,7 +37,7 @@ function start()
     /* CONFIG */
     //
     $app->singleton('config', function($app){
-        return new \Radic\Config;
+        return new \Radic\Config($app);
     });
 
     //
@@ -44,8 +45,15 @@ function start()
     //
     $app->bindIf('files', 'Radic\Filesystem');
     $app->bind('fs', 'files');
-    if(!$app['fs']->exists($app['path.storage'])){
-        $app['fs']->makeDirectory($app['path.storage'], 0777, true);
+    if(!$app->fs->exists($app['path.storage']))
+    {
+        $app->fs->makeDirectory($app['path.storage'], 0777, true);
+    }
+
+    $cachePath = Path::join($app['path.storage'], 'cache');
+    if ( ! $app->fs->exists($cachePath) )
+    {
+        $app->fs->makeDirectory($cachePath);
     }
 
     //
@@ -101,6 +109,8 @@ function start()
     });
 
 
+    $blade = new \Radic\Blade($app, __DIR__ . '/stubs', __DIR__ . '/stubs');
+    $app->instance('blade', $blade);
 
     #var_dump($app);
     define('RADIC_BOOTED', true);

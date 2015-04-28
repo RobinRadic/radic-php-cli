@@ -1,0 +1,4 @@
+@if($yes === true)
+    yes is true
+@endif
+{{ $content }}

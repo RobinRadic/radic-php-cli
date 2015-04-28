@@ -24,6 +24,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property-read \Radic\Config $config configuration repo
  * @property-read \Radic\Stub $stub stubber
  * @property-read \Radic\Google\Client $google stubber
+ * @property-read \Radic\Blade $blade stubber
  *
  */
 class App extends Container

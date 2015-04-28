@@ -24,6 +24,22 @@ class GitInitCommand extends Command
 
     protected $username;
 
+    protected $actions = [ ];
+
+    protected function addAction(\Closure $action)
+    {
+        $this->actions[ ] = $action;
+    }
+
+    protected function executeActions(array $opts = array())
+    {
+        foreach ( $this->actions as $action )
+        {
+            $action($this, $opts);
+        }
+        $this->actions = [ ];
+    }
+
     public function fire()
     {
         $this->gh       = radic()->github;
@@ -54,57 +70,94 @@ class GitInitCommand extends Command
 
         #$this->dump($opts);
 
+
         if ( $opts[ 'stubs' ] )
         {
-            radic()->stub->copy(
-                [ '.gitignore', 'LICENSE', 'README.md', '.editorconfig' ],
-                null,
-                [
-                    'title'      => $opts[ 'title' ],
-                    'repository' => isset($opts[ 'repository' ]) ? $opts[ 'repository' ] : '',
-                    'owner'      => $opts[ 'owner' ]
-                ]
-            );
+            $this->addAction(function ($class, $opts)
+            {
+                radic()->stub->copy(
+                    [ '.gitignore', 'LICENSE', 'README.md', '.editorconfig' ],
+                    null,
+                    [
+                        'title'      => $opts[ 'title' ],
+                        'repository' => isset($opts[ 'repository' ]) ? $opts[ 'repository' ] : '',
+                        'owner'      => $opts[ 'owner' ]
+                    ]
+                );
+            });
         }
 
-        $commands = [ 'git init', 'git add -A' ];
+        $this->addAction(function ($class, $opts)
+        {
+            $class->executeCommands([ 'git init', 'git add -A' ]);
+        });
+
         if ( $opts[ 'commit' ] )
         {
-            $commands[ ] = 'git commit -m "Initial commit"';
+            $this->addAction(function ($class, $opts)
+            {
+                $class->executeCommands('git commit -m "Initial commit"');
+            });
         }
+
         if ( $opts[ 'remote' ] != "no" )
         {
-            $remoteUrl   =
-                'https://' . $this->username . ':' . $this->secret('git pass') .
-                '@github.com/' . $opts['owner'] . '/' . $opts[ 'repository' ];
-            $commands[ ] = 'git remote add origin ' . $remoteUrl;
+            $opts[ 'git_pass' ] = $this->secret('git pass');
+
+            $this->addAction(function ($class, $opts)
+            {
+                $remoteUrl =
+                    'https://' . $class->username . ':' . $opts[ 'git_pass' ] .
+                    '@github.com/' . $opts[ 'owner' ] . '/' . $opts[ 'repository' ];
+
+                $class->executeCommands('git remote add origin ' . $remoteUrl);
+            });
 
             if ( $opts[ 'remote' ] == 'add' )
             {
-                try
+                $this->addAction(function ($class, $opts)
                 {
-                    if ( $opts[ 'owner' ] == $this->username )
+                    $class->executeCommands();
+                    try
                     {
-                        $this->gh->repo()->create($opts[ 'repository' ]);
+                        if ( $opts[ 'owner' ] == $this->username )
+                        {
+                            $this->gh->repo()->create($opts[ 'repository' ]);
+                        }
+                        else
+                        {
+                            $this->gh->repo()->create($opts[ 'repository' ], '', '', true, $opts[ 'owner' ]);
+                        }
                     }
-                    else
+                    catch (\Github\Exception\RuntimeException $e)
                     {
-                        $this->gh->repo()->create($opts[ 'repository' ], '', '', true, $opts[ 'owner' ]);
+                        $this->error($e->getMessage());
                     }
-                }
-                catch (\Github\Exception\RuntimeException $e)
-                {
-                    $this->error($e->getMessage());
-                }
+                });
             }
 
             if ( $opts[ 'push' ] )
             {
-                $commands[ ] = 'git push -u origin master';
+                $this->addAction(function ($class, $opts)
+                {
+                    $class->executeCommands('git push -u origin master');
+                });
             }
         }
 
-        foreach ( $commands as $cmd )
+        $this->executeActions($opts);
+    }
+
+    public function executeCommands($cmd)
+    {
+        if ( is_array($cmd) )
+        {
+            foreach ( $cmd as $c )
+            {
+                $this->executeCommand($c);
+            }
+        }
+        else
         {
             $command = radic()->sh($cmd);
             if ( $command->execute() )
@@ -118,7 +171,7 @@ class GitInitCommand extends Command
                 #$exitCode = $command->getExitCode();
                 if ( $this->confirm('Error happened, we should quit right?', true) )
                 {
-                    break;
+                    exit;
                 }
             }
         }

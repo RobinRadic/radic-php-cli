@@ -29,6 +29,8 @@
         "illuminate/cache": "~5.0",
         "illuminate/log": "~5.0",
         "google/apiclient": "1.1.2",
-        "illuminate/http": "~5.0"
+        "illuminate/http": "~5.0",
+        "vierbergenlars/php-semver": "~3.0",
+        "illuminate/view": "~5.0"
     }
 }
