@@ -5,6 +5,8 @@
 namespace Radic\Commands;
 
 
+use Symfony\Component\Console\Input\InputArgument;
+
 class MakeChangelogCommand extends Command
 {
 
@@ -20,6 +22,12 @@ class MakeChangelogCommand extends Command
         if ( ! radic()->stubs->isExported() )
         {
             return $this->error('You have not exported the stubs file yet. Do so using make:export');
+        }
+
+        $cwd = getcwd();
+        if($path = $this->argument('path'))
+        {
+            chdir($path);
         }
 
         // get owner/repo
@@ -72,6 +80,14 @@ class MakeChangelogCommand extends Command
             ->to(getcwd())
             ->generate([ 'CHANGELOG.md.stub' => false ]);
 
+        chdir($cwd);
         $this->info('All done sire');
+    }
+
+    protected function getArguments()
+    {
+        return array(
+            array('path', InputArgument::OPTIONAL, 'Path to the repo root')
+        );
     }
 }
