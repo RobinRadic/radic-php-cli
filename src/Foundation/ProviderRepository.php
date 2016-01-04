@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation;
+namespace Radic\Foundation;
 
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Filesystem\Filesystem;

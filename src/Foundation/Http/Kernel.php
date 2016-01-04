@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Http;
+namespace Radic\Foundation\Http;
 
 use Exception;
 use Illuminate\Contracts\Debug\ExceptionHandler;

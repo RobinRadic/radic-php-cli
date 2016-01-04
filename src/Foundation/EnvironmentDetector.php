@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation;
+namespace Radic\Foundation;
 
 use Closure;
 use Illuminate\Support\Arr;

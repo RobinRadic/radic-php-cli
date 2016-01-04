@@ -1,13 +1,13 @@
 <?php
 
-namespace Radic\Cli\Foundation\Console;
+namespace Radic\Foundation\Console;
 
 use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Console\Kernel as KernelContract;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
-use Radic\Cli\Foundation\Bootstrap;
+use Radic\Foundation\Bootstrap;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
@@ -67,7 +67,7 @@ class Kernel implements KernelContract
     /**
      * Create a new console kernel instance.
      *
-     * @param  \Radic\Cli\Foundation\Application       $app
+     * @param  \Radic\Foundation\Application           $app
      * @param  \Illuminate\Contracts\Events\Dispatcher $events
      *
      * @return void

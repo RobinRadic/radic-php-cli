@@ -2,7 +2,7 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console;
+namespace Radic\Console;
 
 use Sebwite\Support\Path;
 

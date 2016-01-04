@@ -2,9 +2,9 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Config;
+namespace Radic\Console\Config;
 
-use Radic\Cli\Console\Command;
+use Radic\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class ConfigSetCommand extends Command

@@ -2,10 +2,10 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Config;
+namespace Radic\Console\Config;
 
 use Illuminate\Support\Arr;
-use Radic\Cli\Console\Command;
+use Radic\Console\Command;
 
 class ConfigShowCommand extends Command
 {

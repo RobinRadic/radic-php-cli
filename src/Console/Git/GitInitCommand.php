@@ -2,9 +2,9 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Git;
+namespace Radic\Console\Git;
 
-use Radic\Cli\Console\Command;
+use Radic\Console\Command;
 
 class GitInitCommand extends Command
 {

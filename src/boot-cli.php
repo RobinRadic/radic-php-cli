@@ -6,22 +6,23 @@ $autoloader = "{$dir}{$sep}..{$sep}vendor{$sep}autoload.php";
 require $autoloader;
 
 
-$app = new \Radic\Cli\Foundation\Application(realpath(__DIR__.'/../'));
+$app = new \Radic\Foundation\Application(realpath(__DIR__.'/../'));
 
+$app->instance('files', new \Sebwite\Support\Filesystem);
 
 $app->singleton(
     \Illuminate\Contracts\Foundation\Application::class,
-    \Radic\Cli\Foundation\Application::class
+    \Radic\Foundation\Application::class
 );
 
 $app->singleton(
     \Illuminate\Contracts\Console\Kernel::class,
-    \Radic\Cli\Foundation\Console\Kernel::class
+    \Radic\Foundation\Console\Kernel::class
 );
 
 $app->singleton(
     \Illuminate\Contracts\Debug\ExceptionHandler::class,
-    \Radic\Cli\Exceptions\Handler::class
+    \Radic\Exceptions\Handler::class
 );
 
 $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);

@@ -1,10 +1,10 @@
 <?php
 
-namespace Radic\Cli\Exceptions;
+namespace Radic\Exceptions;
 
 use Exception;
+use Radic\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Radic\Cli\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {

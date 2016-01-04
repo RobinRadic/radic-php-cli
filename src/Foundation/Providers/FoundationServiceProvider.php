@@ -1,12 +1,12 @@
 <?php
 
-namespace Radic\Cli\Foundation\Providers;
+namespace Radic\Foundation\Providers;
 
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Routing\Events\RouteMatched;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\ServiceProvider;
-use Radic\Cli\Foundation\Http\FormRequest;
+use Radic\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 class FoundationServiceProvider extends ServiceProvider
@@ -24,9 +24,10 @@ class FoundationServiceProvider extends ServiceProvider
     /**
      * Initialize the form request with data from the given request.
      *
-     * @param  \Radic\Cli\Foundation\Http\FormRequest  $form
-     * @param  \Symfony\Component\HttpFoundation\Request  $current
-     * @return void
+     * @param  \Radic\Foundation\Http\FormRequest        $form
+     * @param  \Symfony\Component\HttpFoundation\Request $current
+     *
+*@return void
      */
     public function boot()
     {
@@ -56,9 +57,10 @@ class FoundationServiceProvider extends ServiceProvider
     /**
      * Initialize the form request with data from the given request.
      *
-     * @param  \Radic\Cli\Foundation\Http\FormRequest  $form
-     * @param  \Symfony\Component\HttpFoundation\Request  $current
-     * @return void
+     * @param  \Radic\Foundation\Http\FormRequest        $form
+     * @param  \Symfony\Component\HttpFoundation\Request $current
+     *
+*@return void
      */
     protected function initializeRequest(FormRequest $form, Request $current)
     {

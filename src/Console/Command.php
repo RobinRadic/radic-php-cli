@@ -2,11 +2,9 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console;
+namespace Radic\Console;
 
 
-
-use Radic\Cli\Foundation\Auth\User;
 
 abstract class Command extends \Sebwite\Support\Command
 {

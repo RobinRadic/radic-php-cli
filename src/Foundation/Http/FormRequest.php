@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Http;
+namespace Radic\Foundation\Http;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
@@ -184,7 +184,7 @@ class FormRequest extends Request implements ValidatesWhenResolved
      *
      * @param  \Illuminate\Routing\Redirector  $redirector
      *
-*@return \Radic\Cli\Foundation\Http\FormRequest
+*@return \Radic\Foundation\Http\FormRequest
      */
     public function setRedirector(Redirector $redirector)
     {

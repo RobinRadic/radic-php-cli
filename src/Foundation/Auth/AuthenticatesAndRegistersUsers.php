@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Auth;
+namespace Radic\Foundation\Auth;
 
 trait AuthenticatesAndRegistersUsers
 {

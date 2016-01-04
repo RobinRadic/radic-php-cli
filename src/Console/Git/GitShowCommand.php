@@ -4,7 +4,7 @@
  */
 namespace Radic\Cli\Console\Git;
 
-use Radic\Cli\Console\Command;
+use Radic\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class GitShowCommand extends Command

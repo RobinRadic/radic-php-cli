@@ -2,7 +2,7 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Foundation;
+namespace Radic\Foundation;
 
 use Closure;
 use Illuminate\Container\Container;
@@ -12,7 +12,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Radic\Cli\Foundation\Traits\ApplicationPaths;
+use Radic\Foundation\Traits\ApplicationPaths;
 use Sebwite\Support\Path;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -32,8 +32,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property-read \Illuminate\Contracts\Cache\Store $cache caching store
  * @property-read \Illuminate\Events\Dispatcher     $events the event dispatcher
  * @property-read \Illuminate\Log\Writer            $log log writer
- * @property-read \Radic\Cli\Config\Repository      $config configuration repo
- * @property-read \Radic\Cli\Blade                  $blade stubber
+ * @property-read \Radic\Config\Repository          $config configuration repo
  *
  */
 class Application extends Container implements ApplicationContract
@@ -98,7 +97,7 @@ class Application extends Container implements ApplicationContract
         $root = (@file_put_contents($path, '1') === false ? false : true);
         if ( $root !== false )
         {
-            radic()->fs->delete($path);
+            $this->fs->delete($path);
         }
 
         return $root;

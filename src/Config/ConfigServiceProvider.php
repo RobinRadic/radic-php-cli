@@ -6,7 +6,7 @@
  */
 
 
-namespace Radic\Cli\Config;
+namespace Radic\Config;
 
 
 use PDOException;

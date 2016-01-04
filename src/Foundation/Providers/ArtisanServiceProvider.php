@@ -1,9 +1,9 @@
 <?php
 
-namespace Radic\Cli\Foundation\Providers;
+namespace Radic\Foundation\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Radic\Cli\Foundation\Console\ClearCompiledCommand;
+use Radic\Foundation\Console\ClearCompiledCommand;
 
 class ArtisanServiceProvider extends ServiceProvider
 {

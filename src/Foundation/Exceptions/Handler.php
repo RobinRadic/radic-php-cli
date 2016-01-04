@@ -1,14 +1,14 @@
 <?php
 
-namespace Radic\Cli\Foundation\Exceptions;
+namespace Radic\Foundation\Exceptions;
 
 use Exception;
-use Psr\Log\LoggerInterface;
+use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
-use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler implements ExceptionHandlerContract
 {

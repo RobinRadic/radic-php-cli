@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Bootstrap;
+namespace Radic\Foundation\Bootstrap;
 
 use Illuminate\Contracts\Foundation\Application;
 use Sebwite\Support\Filesystem;

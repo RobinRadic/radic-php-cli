@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Radic\\Cli\\": "src/"
+            "Radic\\": "src/"
         },
         "files": [
             "src/Foundation/helpers.php"

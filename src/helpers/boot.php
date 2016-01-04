@@ -8,7 +8,7 @@ use Sebwite\Support\Path;
 
 function start()
 {
-    $app = new \Radic\Cli\Foundation\Application;
+    $app = new \Radic\Foundation\Application;
 
     $app->bind('path.base', function () {
         return __DIR__ . '/..';
@@ -47,7 +47,7 @@ function start()
     $log->useFiles($app['path.storage'].'/main.log');
 
     $app->singleton('config', function ($app) {
-        return new \Radic\Cli\Config\Repository($app);
+        return new \Radic\Config\Repository($app);
     });
 
     $app->bindIf('files', Sebwite\Support\Filesystem::class);
@@ -77,7 +77,7 @@ function start()
 
 
 
-    $blade = new Radic\Cli\Blade($app, __DIR__ . '/stubs', __DIR__ . '/stubs');
+    $blade = new Radic\Blade($app, __DIR__ . '/stubs', __DIR__ . '/stubs');
     $app->instance('blade', $blade);
 
     #var_dump($app);

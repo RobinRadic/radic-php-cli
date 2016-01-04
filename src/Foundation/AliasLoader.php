@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation;
+namespace Radic\Foundation;
 
 class AliasLoader
 {
@@ -21,7 +21,7 @@ class AliasLoader
     /**
      * The singleton instance of the loader.
      *
-     * @var \Radic\Cli\Foundation\AliasLoader
+     * @var \Radic\Foundation\AliasLoader
      */
     protected static $instance;
 
@@ -39,7 +39,8 @@ class AliasLoader
      * Get or create the singleton alias loader instance.
      *
      * @param  array  $aliases
-     * @return \Radic\Cli\Foundation\AliasLoader
+     *
+*@return \Radic\Foundation\AliasLoader
      */
     public static function getInstance(array $aliases = [])
     {
@@ -148,8 +149,9 @@ class AliasLoader
     /**
      * Set the value of the singleton alias loader.
      *
-     * @param  \Radic\Cli\Foundation\AliasLoader  $loader
-     * @return void
+     * @param  \Radic\Foundation\AliasLoader $loader
+     *
+*@return void
      */
     public static function setInstance($loader)
     {

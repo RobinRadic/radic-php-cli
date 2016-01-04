@@ -2,7 +2,7 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Config;
+namespace Radic\Config;
 
 use Illuminate\Cache\CacheManager;
 use Illuminate\Config\Repository as BaseRepository;

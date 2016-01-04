@@ -6,7 +6,7 @@
  */
 
 
-namespace Radic\Cli\Console\Auth;
+namespace Radic\Console\Auth;
 
 
 use Illuminate\Database\Console\Migrations\BaseCommand;

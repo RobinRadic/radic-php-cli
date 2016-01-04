@@ -1,10 +1,10 @@
 <?php
 
-namespace Radic\Cli\Foundation\Bootstrap;
+namespace Radic\Foundation\Bootstrap;
 
-use Illuminate\Support\Facades\Facade;
-use Radic\Cli\Foundation\AliasLoader;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Facade;
+use Radic\Foundation\AliasLoader;
 
 class RegisterFacades
 {

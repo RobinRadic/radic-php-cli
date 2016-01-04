@@ -1,11 +1,11 @@
 <?php
 
-namespace Radic\Cli\Foundation\Console;
+namespace Radic\Foundation\Console;
 
 use Exception;
-use Illuminate\Support\Collection;
-use Radic\Cli\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Radic\Foundation\Application;
 use Symfony\Component\VarDumper\Caster\Caster;
 
 class IlluminateCaster
@@ -37,8 +37,9 @@ class IlluminateCaster
     /**
      * Get an array representing the properties of an application.
      *
-     * @param  \Radic\Cli\Foundation\Application  $app
-     * @return array
+     * @param  \Radic\Foundation\Application $app
+     *
+*@return array
      */
     public static function castApplication(Application $app)
     {

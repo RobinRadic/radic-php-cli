@@ -1,4 +1,4 @@
-<?php namespace Radic\Cli\Console\Traits;
+<?php namespace Radic\Console\Traits;
 
 /**
  * Part of the Radic packages.

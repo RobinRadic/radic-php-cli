@@ -2,7 +2,7 @@
  /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Traits;
+namespace Radic\Console\Traits;
 
 /**
  * trait LastPassTrait

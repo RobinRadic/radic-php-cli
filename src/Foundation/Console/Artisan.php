@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Console;
+namespace Radic\Foundation\Console;
 
 use Illuminate\Console\Application;
 use Illuminate\Contracts\Container\Container;

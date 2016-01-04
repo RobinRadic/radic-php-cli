@@ -1,10 +1,10 @@
 <?php
 
-namespace Radic\Cli\Foundation\Bootstrap;
+namespace Radic\Foundation\Bootstrap;
 
 use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Illuminate\Contracts\Foundation\Application;
-use Radic\Cli\Config\Repository;
+use Radic\Config\Repository;
 use Sebwite\Support\Filesystem;
 use Sebwite\Support\Path;
 use Symfony\Component\Finder\Finder;

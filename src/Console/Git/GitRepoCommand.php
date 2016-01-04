@@ -2,10 +2,10 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Git;
+namespace Radic\Console\Git;
 
 use Illuminate\Support\Str;
-use Radic\Cli\Console\Command;
+use Radic\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class GitRepoCommand extends Command

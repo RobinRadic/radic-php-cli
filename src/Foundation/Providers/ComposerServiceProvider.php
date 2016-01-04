@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Providers;
+namespace Radic\Foundation\Providers;
 
 use Illuminate\Support\Composer;
 use Illuminate\Support\ServiceProvider;

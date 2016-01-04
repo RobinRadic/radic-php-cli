@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Providers;
+namespace Radic\Providers;
 
 use Sebwite\Support\ConsoleServiceProvider as BaseConsoleProvider;
 use Sebwite\Support\Path;

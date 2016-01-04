@@ -88,7 +88,7 @@ if ( !function_exists('app') )
      * @param  string $make
      * @param  array  $parameters
      *
-     * @return mixed|\Radic\Cli\Foundation\Application
+     * @return mixed|\Radic\Foundation\Application
      */
     function app($make = null, $parameters = [ ])
     {

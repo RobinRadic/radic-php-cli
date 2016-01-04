@@ -6,7 +6,7 @@
  */
 
 
-namespace Radic\Cli\Foundation\Traits;
+namespace Radic\Foundation\Traits;
 
 use Sebwite\Support\Path;
 
@@ -17,7 +17,7 @@ use Sebwite\Support\Path;
  * @package        Radic\Cli
  * @author         Sebwite
  * @copyright      Copyright (c) 2015, Sebwite. All rights reserved
- * @mixin \Radic\Cli\Foundation\Application
+ * @mixin \Radic\Foundation\Application
  */
 trait ApplicationPaths
 {

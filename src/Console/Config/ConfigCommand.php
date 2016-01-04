@@ -6,12 +6,12 @@
  */
 
 
-namespace Radic\Cli\Console\Config;
+namespace Radic\Console\Config;
 
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigCommand extends \Radic\Cli\Console\Command
+class ConfigCommand extends \Radic\Console\Command
 {
 
     protected $signature = 'config

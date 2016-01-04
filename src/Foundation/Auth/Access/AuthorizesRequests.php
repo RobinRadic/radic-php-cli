@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Auth\Access;
+namespace Radic\Foundation\Auth\Access;
 
 use Illuminate\Contracts\Auth\Access\Gate;
 

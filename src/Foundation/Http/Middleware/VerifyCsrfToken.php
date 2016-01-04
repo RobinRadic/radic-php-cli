@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation\Http\Middleware;
+namespace Radic\Foundation\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Encryption\Encrypter;
