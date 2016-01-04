@@ -26,13 +26,10 @@ class DebugDetection
      */
     public function bootstrap(Application $app)
     {
-        if ($app['config']['app.debug'] === true || env('APP_DEBUG', false) === true ) {
+        if ( env('APP_DEBUG', false) === true ) {
             $app['config']['app.providers'] =  array_merge(
                 $app['config']['app.providers'],
                 $app['config']['app.providers-dev']
-            );
-            $app->make('Illuminate\Contracts\Http\Kernel')->prependMiddleware(
-                #\Clockwork\Support\Laravel\ClockworkMiddleware::class
             );
         }
     }

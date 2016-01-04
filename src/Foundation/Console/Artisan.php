@@ -13,4 +13,6 @@ class Artisan extends Application
         parent::__construct($laravel, $events, $version);
         $this->setName(app()->getName());
     }
+
+
 }

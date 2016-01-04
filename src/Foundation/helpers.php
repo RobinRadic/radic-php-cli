@@ -12,6 +12,22 @@ use Illuminate\Support\Str;
 use Illuminate\View\Expression;
 
 
+
+if ( !function_exists('artisan') )
+{
+    /**
+     * Get the path to the public folder.
+     *
+     * @param  string $path
+     *
+     * @return string
+     */
+    function artisan($command, $parameters = [])
+    {
+        return app()->artisan($command, $parameters);
+    }
+}
+
 if ( !function_exists('home_path') )
 {
     /**

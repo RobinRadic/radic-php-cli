@@ -26,12 +26,12 @@ class ConsoleServiceProvider extends BaseConsoleProvider
     /**
      * @var  string
      */
-    protected $namespace = 'Radic\\Cli\\Console';
+    protected $namespace = 'Radic\\Console';
 
     /**
      * @var  string
      */
-    protected $prefix = 'radic.cli.commands.';
+    protected $prefix = 'radic.commands.';
 
     /**
      * @var  array
@@ -69,7 +69,7 @@ class ConsoleServiceProvider extends BaseConsoleProvider
                 continue;
             }
 
-            $className = '\Radic\Cli\Console\\' . $path;
+            $className = '\Radic\Console\\' . $path;
 
             $path = Str::removeRight($path, 'Command');
             $binding = Str::removeLeft(Str::toSnakeCase($path), '_');

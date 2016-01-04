@@ -16,6 +16,10 @@ class DetectEnvironment {
      */
     public function bootstrap(Application $app)
     {
+        $app->detectEnvironment(function(){
+            return env('APP_ENV', 'production');
+        });
+
         if ( !$app->configurationIsCached() )
         {
             try

@@ -2,7 +2,7 @@
 /**
  * Part of the Radic packages.
  */
-namespace Radic\Cli\Console\Git;
+namespace Radic\Console\Git;
 
 use Radic\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;

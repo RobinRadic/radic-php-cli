@@ -19,11 +19,11 @@ class ConsoleSupportServiceProvider extends AggregateServiceProvider
      * @var array
      */
     protected $providers = [
-        'Radic\Cli\Foundation\Providers\ArtisanServiceProvider',
+        'Radic\Foundation\Providers\ArtisanServiceProvider',
         #'Illuminate\Console\ScheduleServiceProvider',
         'Illuminate\Database\MigrationServiceProvider',
         'Illuminate\Database\SeedServiceProvider',
-        'Radic\Cli\Foundation\Providers\ComposerServiceProvider',
+        'Radic\Foundation\Providers\ComposerServiceProvider',
         #'Illuminate\Queue\ConsoleServiceProvider',
     ];
 }

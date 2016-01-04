@@ -6,17 +6,15 @@
  */
 
 
-namespace Radic\Console\Auth;
+namespace Radic\Console;
 
 
-use Illuminate\Database\Console\Migrations\BaseCommand;
-
-class LoginCommand extends BaseCommand
+class FirstRunCommand extends Command
 {
-    protected $signature = 'login';
+    protected $signature = 'first-run';
 
     public function handle()
     {
-
+        $this->ask('asdf');
     }
 }

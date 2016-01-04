@@ -1,5 +1,7 @@
 <?php
 
+define('LARAVEL_START', microtime(true));
+
 $sep = DIRECTORY_SEPARATOR;
 $dir = __DIR__;
 $autoloader = "{$dir}{$sep}..{$sep}vendor{$sep}autoload.php";
@@ -7,13 +9,6 @@ require $autoloader;
 
 
 $app = new \Radic\Foundation\Application(realpath(__DIR__.'/../'));
-
-$app->instance('files', new \Sebwite\Support\Filesystem);
-
-$app->singleton(
-    \Illuminate\Contracts\Foundation\Application::class,
-    \Radic\Foundation\Application::class
-);
 
 $app->singleton(
     \Illuminate\Contracts\Console\Kernel::class,

@@ -1,7 +1,5 @@
 <?php
-/**
- * Part of the Radic packages.
- */
+
 namespace Radic\Foundation;
 
 use Closure;
@@ -10,32 +8,20 @@ use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Events\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RoutingServiceProvider;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Radic\Foundation\Traits\ApplicationPaths;
+use RuntimeException;
 use Sebwite\Support\Path;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\VarDumper\VarDumper;
 
-/**
- * Class App
- *
- * @package     Radic
- * @author      Robin Radic
- * @license     MIT
- * @copyright   2011-2015, Robin Radic
- * @link        http://radic.mit-license.org
- *
- * @property-read \Sebwite\Support\Filesystem       $fs filesystem funcs
- * @property-read \Illuminate\Contracts\Cache\Store $cache caching store
- * @property-read \Illuminate\Events\Dispatcher     $events the event dispatcher
- * @property-read \Illuminate\Log\Writer            $log log writer
- * @property-read \Radic\Config\Repository          $config configuration repo
- *
- */
-class Application extends Container implements ApplicationContract
+class Application extends Container implements ApplicationContract, HttpKernelInterface
 {
     use ApplicationPaths;
 
@@ -118,6 +104,45 @@ class Application extends Container implements ApplicationContract
 
         return @openssl_decrypt($str, 'AES-256-CBC', $this->getEncryptionKey());
     }
+
+    /**
+     * kernel method
+     *
+     * @return \Radic\Foundation\Console\Kernel
+     */
+    public function kernel()
+    {
+        return $this->make('Illuminate\Contracts\Console\Kernel');
+    }
+
+    /**
+     * artisan method
+     *
+     * @return \Radic\Foundation\Console\Kernel
+     */
+    public function artisan($command, $parameters = [ ])
+    {
+        return $this->make('Illuminate\Contracts\Console\Kernel')->call($command, $parameters);
+    }
+
+    public function isFirstRun()
+    {
+        return $this[ 'config' ]->get('first-run', true);
+    }
+
+    public function setFirstRun($isFirstRun)
+    {
+        $this[ 'config' ]->persist('first-run', $isFirstRun);
+
+        return $this;
+    }
+
+    /**
+     * The Laravel framework version.
+     *
+     * @var string
+     */
+    const VERSION = '5.2.6';
 
     /**
      * Indicates if the application has been bootstrapped before.
@@ -224,6 +249,113 @@ class Application extends Container implements ApplicationContract
         }
     }
 
+    /**
+     * Get the version number of the application.
+     *
+     * @return string
+     */
+    public function version()
+    {
+        return static::VERSION;
+    }
+
+    /**
+     * Register the basic bindings into the container.
+     *
+     * @return void
+     */
+    protected function registerBaseBindings()
+    {
+        static::setInstance($this);
+
+        $this->instance('app', $this);
+
+        $this->instance('Illuminate\Container\Container', $this);
+    }
+
+    /**
+     * Register all of the base service providers.
+     *
+     * @return void
+     */
+    protected function registerBaseServiceProviders()
+    {
+        $this->register(new EventServiceProvider($this));
+
+        $this->register(new RoutingServiceProvider($this));
+    }
+
+    /**
+     * Run the given array of bootstrap classes.
+     *
+     * @param  array $bootstrappers
+     *
+     * @return void
+     */
+    public function bootstrapWith(array $bootstrappers)
+    {
+        $this->hasBeenBootstrapped = true;
+
+        foreach ( $bootstrappers as $bootstrapper )
+        {
+            $this[ 'events' ]->fire('bootstrapping: ' . $bootstrapper, [ $this ]);
+
+            $this->make($bootstrapper)->bootstrap($this);
+
+            $this[ 'events' ]->fire('bootstrapped: ' . $bootstrapper, [ $this ]);
+        }
+    }
+
+    /**
+     * Register a callback to run after loading the environment.
+     *
+     * @param  \Closure $callback
+     *
+     * @return void
+     */
+    public function afterLoadingEnvironment(Closure $callback)
+    {
+        return $this->afterBootstrapping(
+            'Illuminate\Foundation\Bootstrap\DetectEnvironment', $callback
+        );
+    }
+
+    /**
+     * Register a callback to run before a bootstrapper.
+     *
+     * @param  string  $bootstrapper
+     * @param  Closure $callback
+     *
+     * @return void
+     */
+    public function beforeBootstrapping($bootstrapper, Closure $callback)
+    {
+        $this[ 'events' ]->listen('bootstrapping: ' . $bootstrapper, $callback);
+    }
+
+    /**
+     * Register a callback to run after a bootstrapper.
+     *
+     * @param  string  $bootstrapper
+     * @param  Closure $callback
+     *
+     * @return void
+     */
+    public function afterBootstrapping($bootstrapper, Closure $callback)
+    {
+        $this[ 'events' ]->listen('bootstrapped: ' . $bootstrapper, $callback);
+    }
+
+    /**
+     * Determine if the application has been bootstrapped before.
+     *
+     * @return bool
+     */
+    public function hasBeenBootstrapped()
+    {
+        return $this->hasBeenBootstrapped;
+    }
+
 
     /**
      * Get the path to the environment file directory.
@@ -325,153 +457,24 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Register the core class aliases in the container.
-     *
-     * @return void
-     */
-    public function registerCoreContainerAliases()
-    {
-        $aliases = [
-            'app'                  => [ 'Radic\Cli\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application' ],
-            'auth'                 => 'Illuminate\Auth\AuthManager',
-            'auth.driver'          => [ 'Illuminate\Auth\Guard', 'Illuminate\Contracts\Auth\Guard' ],
-            'auth.password.tokens' => 'Illuminate\Auth\Passwords\TokenRepositoryInterface',
-            'blade.compiler'       => 'Illuminate\View\Compilers\BladeCompiler',
-            'cache'                => [ 'Illuminate\Cache\CacheManager', 'Illuminate\Contracts\Cache\Factory' ],
-            'cache.store'          => [ 'Illuminate\Cache\Repository', 'Illuminate\Contracts\Cache\Repository' ],
-            'config'               => [ 'Illuminate\Config\Repository', 'Illuminate\Contracts\Config\Repository' ],
-            'cookie'               => [ 'Illuminate\Cookie\CookieJar', 'Illuminate\Contracts\Cookie\Factory', 'Illuminate\Contracts\Cookie\QueueingFactory' ],
-            'encrypter'            => [ 'Illuminate\Encryption\Encrypter', 'Illuminate\Contracts\Encryption\Encrypter' ],
-            'db'                   => 'Illuminate\Database\DatabaseManager',
-            'db.connection'        => [ 'Illuminate\Database\Connection', 'Illuminate\Database\ConnectionInterface' ],
-            'events'               => [ 'Illuminate\Events\Dispatcher', 'Illuminate\Contracts\Events\Dispatcher' ],
-            'files'                => 'Illuminate\Filesystem\Filesystem',
-            'filesystem'           => [ 'Illuminate\Filesystem\FilesystemManager', 'Illuminate\Contracts\Filesystem\Factory' ],
-            'filesystem.disk'      => 'Illuminate\Contracts\Filesystem\Filesystem',
-            'filesystem.cloud'     => 'Illuminate\Contracts\Filesystem\Cloud',
-            'hash'                 => 'Illuminate\Contracts\Hashing\Hasher',
-            'translator'           => [ 'Illuminate\Translation\Translator', 'Symfony\Component\Translation\TranslatorInterface' ],
-            'log'                  => [ 'Illuminate\Log\Writer', 'Illuminate\Contracts\Logging\Log', 'Psr\Log\LoggerInterface' ],
-            'mailer'               => [ 'Illuminate\Mail\Mailer', 'Illuminate\Contracts\Mail\Mailer', 'Illuminate\Contracts\Mail\MailQueue' ],
-            'auth.password'        => [ 'Illuminate\Auth\Passwords\PasswordBroker', 'Illuminate\Contracts\Auth\PasswordBroker' ],
-            'queue'                => [ 'Illuminate\Queue\QueueManager', 'Illuminate\Contracts\Queue\Factory', 'Illuminate\Contracts\Queue\Monitor' ],
-            'queue.connection'     => 'Illuminate\Contracts\Queue\Queue',
-            'redirect'             => 'Illuminate\Routing\Redirector',
-            'redis'                => [ 'Illuminate\Redis\Database', 'Illuminate\Contracts\Redis\Database' ],
-            'request'              => 'Illuminate\Http\Request',
-            'router'               => [ 'Illuminate\Routing\Router', 'Illuminate\Contracts\Routing\Registrar' ],
-            'session'              => 'Illuminate\Session\SessionManager',
-            'session.store'        => [ 'Illuminate\Session\Store', 'Symfony\Component\HttpFoundation\Session\SessionInterface' ],
-            'url'                  => [ 'Illuminate\Routing\UrlGenerator', 'Illuminate\Contracts\Routing\UrlGenerator' ],
-            'validator'            => [ 'Illuminate\Validation\Factory', 'Illuminate\Contracts\Validation\Factory' ],
-            'view'                 => [ 'Illuminate\View\Factory', 'Illuminate\Contracts\View\Factory' ],
-        ];
-
-        foreach ( $aliases as $key => $aliases )
-        {
-            foreach ( (array)$aliases as $alias )
-            {
-                $this->alias($key, $alias);
-            }
-        }
-    }
-
-    /**
-     * Register the basic bindings into the container.
-     *
-     * @return void
-     */
-    protected function registerBaseBindings()
-    {
-        static::setInstance($this);
-
-        $this->instance('app', $this);
-
-        $this->instance('Illuminate\Container\Container', $this);
-    }
-
-    /**
-     * Register all of the base service providers.
-     *
-     * @return void
-     */
-    protected function registerBaseServiceProviders()
-    {
-        $this->register(new EventServiceProvider($this));
-    }
-
-
-    /**
-     * Run the given array of bootstrap classes.
-     *
-     * @param  array $bootstrappers
-     *
-     * @return void
-     */
-    public function bootstrapWith(array $bootstrappers)
-    {
-        $this->hasBeenBootstrapped = true;
-
-        foreach ( $bootstrappers as $bootstrapper )
-        {
-            $this[ 'events' ]->fire('bootstrapping: ' . $bootstrapper, [ $this ]);
-
-            $this->make($bootstrapper)->bootstrap($this);
-
-            $this[ 'events' ]->fire('bootstrapped: ' . $bootstrapper, [ $this ]);
-        }
-    }
-
-    /**
-     * Register a callback to run after loading the environment.
-     *
-     * @param  \Closure $callback
-     *
-     * @return void
-     */
-    public function afterLoadingEnvironment(Closure $callback)
-    {
-        return $this->afterBootstrapping(
-            'Radic\Cli\Foundation\Bootstrap\DetectEnvironment', $callback
-        );
-    }
-
-    /**
-     * Register a callback to run before a bootstrapper.
-     *
-     * @param  string  $bootstrapper
-     * @param  Closure $callback
-     *
-     * @return void
-     */
-    public function beforeBootstrapping($bootstrapper, Closure $callback)
-    {
-        $this[ 'events' ]->listen('bootstrapping: ' . $bootstrapper, $callback);
-    }
-
-    /**
-     * Register a callback to run after a bootstrapper.
-     *
-     * @param  string  $bootstrapper
-     * @param  Closure $callback
-     *
-     * @return void
-     */
-    public function afterBootstrapping($bootstrapper, Closure $callback)
-    {
-        $this[ 'events' ]->listen('bootstrapped: ' . $bootstrapper, $callback);
-    }
-
-    /**
-     * Determine if the application has been bootstrapped before.
+     * Determine if we are running in the console.
      *
      * @return bool
      */
-    public function hasBeenBootstrapped()
+    public function runningInConsole()
     {
-        return $this->hasBeenBootstrapped;
+        return php_sapi_name() == 'cli';
     }
 
+    /**
+     * Determine if we are running unit tests.
+     *
+     * @return bool
+     */
+    public function runningUnitTests()
+    {
+        return $this[ 'env' ] == 'testing';
+    }
 
     /**
      * Register all of the configured providers.
@@ -544,7 +547,7 @@ class Application extends Container implements ApplicationContract
     {
         $name = is_string($provider) ? $provider : get_class($provider);
 
-        return \Illuminate\Support\Arr::first($this->serviceProviders, function ($key, $value) use ($name)
+        return Arr::first($this->serviceProviders, function ($key, $value) use ($name)
         {
             return $value instanceof $name;
         });
@@ -723,11 +726,6 @@ class Application extends Container implements ApplicationContract
         $this->fireAppCallbacks($this->bootedCallbacks);
     }
 
-    public function runningInConsole()
-    {
-        return php_sapi_name() == 'cli';
-    }
-
     /**
      * Boot the given service provider.
      *
@@ -740,6 +738,35 @@ class Application extends Container implements ApplicationContract
         if ( method_exists($provider, 'boot') )
         {
             return $this->call([ $provider, 'boot' ]);
+        }
+    }
+
+    /**
+     * Register a new boot listener.
+     *
+     * @param  mixed $callback
+     *
+     * @return void
+     */
+    public function booting($callback)
+    {
+        $this->bootingCallbacks[] = $callback;
+    }
+
+    /**
+     * Register a new "booted" listener.
+     *
+     * @param  mixed $callback
+     *
+     * @return void
+     */
+    public function booted($callback)
+    {
+        $this->bootedCallbacks[] = $callback;
+
+        if ( $this->isBooted() )
+        {
+            $this->fireAppCallbacks([ $callback ]);
         }
     }
 
@@ -784,7 +811,7 @@ class Application extends Container implements ApplicationContract
      */
     public function configurationIsCached()
     {
-        return $this[ 'files' ]->exists($this->getCachedConfigPath());
+        return file_exists($this->getCachedConfigPath());
     }
 
     /**
@@ -828,13 +855,13 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Get the path to the cached services.json file.
+     * Get the path to the cached services.php file.
      *
      * @return string
      */
     public function getCachedServicesPath()
     {
-        return $this->storagePath() . '/services.json';
+        return $this->storagePath() . '/services.php';
     }
 
     /**
@@ -952,44 +979,10 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Get the version number of the application.
-     *
-     * @return string
-     */
-    public function version()
-    {
-        return $this->getVersion();
-    }
-
-    /**
-     * Register a new boot listener.
-     *
-     * @param  mixed $callback
-     *
-     * @return void
-     */
-    public function booting($callback)
-    {
-        // TODO: Implement booting() method.
-    }
-
-    /**
-     * Register a new "booted" listener.
-     *
-     * @param  mixed $callback
-     *
-     * @return void
-     */
-    public function booted($callback)
-    {
-        // TODO: Implement booted() method.
-    }
-
-
-    /**
      * Define a callback to be used to configure Monolog.
      *
-     * @param  callable  $callback
+     * @param  callable $callback
+     *
      * @return $this
      */
     public function configureMonologUsing(callable $callback)
@@ -1006,7 +999,7 @@ class Application extends Container implements ApplicationContract
      */
     public function hasMonologConfigurator()
     {
-        return ! is_null($this->monologConfigurator);
+        return !is_null($this->monologConfigurator);
     }
 
     /**
@@ -1026,21 +1019,132 @@ class Application extends Container implements ApplicationContract
      */
     public function getLocale()
     {
-        return $this['config']->get('app.locale');
+        return $this[ 'config' ]->get('app.locale');
     }
 
     /**
      * Set the current application locale.
      *
-     * @param  string  $locale
+     * @param  string $locale
+     *
      * @return void
      */
     public function setLocale($locale)
     {
-        $this['config']->set('app.locale', $locale);
+        $this[ 'config' ]->set('app.locale', $locale);
 
-        $this['translator']->setLocale($locale);
+        $this[ 'translator' ]->setLocale($locale);
 
-        $this['events']->fire('locale.changed', [$locale]);
+        $this[ 'events' ]->fire('locale.changed', [ $locale ]);
+    }
+
+    /**
+     * Register the core class aliases in the container.
+     *
+     * @return void
+     */
+    public function registerCoreContainerAliases()
+    {
+        $aliases = [
+            'app'                  => [ 'Illuminate\Foundation\Application', 'Illuminate\Contracts\Container\Container', 'Illuminate\Contracts\Foundation\Application' ],
+            'auth'                 => [ 'Illuminate\Auth\AuthManager', 'Illuminate\Contracts\Auth\Factory' ],
+            'auth.driver'          => [ 'Illuminate\Contracts\Auth\Guard' ],
+            'auth.password'        => [ 'Illuminate\Contracts\Auth\PasswordBrokerFactory' ],
+            'auth.password.broker' => [ 'Illuminate\Contracts\Auth\PasswordBroker' ],
+            'blade.compiler'       => [ 'Illuminate\View\Compilers\BladeCompiler' ],
+            'cache'                => [ 'Illuminate\Cache\CacheManager', 'Illuminate\Contracts\Cache\Factory' ],
+            'cache.store'          => [ 'Illuminate\Cache\Repository', 'Illuminate\Contracts\Cache\Repository' ],
+            'config'               => [ 'Illuminate\Config\Repository', 'Illuminate\Contracts\Config\Repository' ],
+            'cookie'               => [ 'Illuminate\Cookie\CookieJar', 'Illuminate\Contracts\Cookie\Factory', 'Illuminate\Contracts\Cookie\QueueingFactory' ],
+            'encrypter'            => [ 'Illuminate\Encryption\Encrypter', 'Illuminate\Contracts\Encryption\Encrypter' ],
+            'db'                   => [ 'Illuminate\Database\DatabaseManager' ],
+            'db.connection'        => [ 'Illuminate\Database\Connection', 'Illuminate\Database\ConnectionInterface' ],
+            'events'               => [ 'Illuminate\Events\Dispatcher', 'Illuminate\Contracts\Events\Dispatcher' ],
+            'files'                => [ 'Illuminate\Filesystem\Filesystem' ],
+            'filesystem'           => [ 'Illuminate\Filesystem\FilesystemManager', 'Illuminate\Contracts\Filesystem\Factory' ],
+            'filesystem.disk'      => [ 'Illuminate\Contracts\Filesystem\Filesystem' ],
+            'filesystem.cloud'     => [ 'Illuminate\Contracts\Filesystem\Cloud' ],
+            'hash'                 => [ 'Illuminate\Contracts\Hashing\Hasher' ],
+            'translator'           => [ 'Illuminate\Translation\Translator', 'Symfony\Component\Translation\TranslatorInterface' ],
+            'log'                  => [ 'Illuminate\Log\Writer', 'Illuminate\Contracts\Logging\Log', 'Psr\Log\LoggerInterface' ],
+            'mailer'               => [ 'Illuminate\Mail\Mailer', 'Illuminate\Contracts\Mail\Mailer', 'Illuminate\Contracts\Mail\MailQueue' ],
+            'auth.password'        => [ 'Illuminate\Auth\Passwords\PasswordBrokerManager', 'Illuminate\Contracts\Auth\PasswordBrokerFactory' ],
+            'auth.password.broker' => [ 'Illuminate\Auth\Passwords\PasswordBroker', 'Illuminate\Contracts\Auth\PasswordBroker' ],
+            'queue'                => [ 'Illuminate\Queue\QueueManager', 'Illuminate\Contracts\Queue\Factory', 'Illuminate\Contracts\Queue\Monitor' ],
+            'queue.connection'     => [ 'Illuminate\Contracts\Queue\Queue' ],
+            'redirect'             => [ 'Illuminate\Routing\Redirector' ],
+            'redis'                => [ 'Illuminate\Redis\Database', 'Illuminate\Contracts\Redis\Database' ],
+            'request'              => [ 'Illuminate\Http\Request', 'Symfony\Component\HttpFoundation\Request' ],
+            'router'               => [ 'Illuminate\Routing\Router', 'Illuminate\Contracts\Routing\Registrar' ],
+            'session'              => [ 'Illuminate\Session\SessionManager' ],
+            'session.store'        => [ 'Illuminate\Session\Store', 'Symfony\Component\HttpFoundation\Session\SessionInterface' ],
+            'url'                  => [ 'Illuminate\Routing\UrlGenerator', 'Illuminate\Contracts\Routing\UrlGenerator' ],
+            'validator'            => [ 'Illuminate\Validation\Factory', 'Illuminate\Contracts\Validation\Factory' ],
+            'view'                 => [ 'Illuminate\View\Factory', 'Illuminate\Contracts\View\Factory' ],
+        ];
+
+        foreach ( $aliases as $key => $aliases )
+        {
+            foreach ( $aliases as $alias )
+            {
+                $this->alias($key, $alias);
+            }
+        }
+    }
+
+    /**
+     * Flush the container of all bindings and resolved instances.
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        parent::flush();
+
+        $this->loadedProviders = [ ];
+    }
+
+    /**
+     * Get the used kernel object.
+     *
+     * @return \Illuminate\Contracts\Console\Kernel|\Illuminate\Contracts\Http\Kernel
+     */
+    protected function getKernel()
+    {
+        $kernelContract = $this->runningInConsole()
+            ? 'Illuminate\Contracts\Console\Kernel'
+            : 'Illuminate\Contracts\Http\Kernel';
+
+        return $this->make($kernelContract);
+    }
+
+    /**
+     * Get the application namespace.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function getNamespace()
+    {
+        if ( !is_null($this->namespace) )
+        {
+            return $this->namespace;
+        }
+
+        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+
+        foreach ( (array)data_get($composer, 'autoload.psr-4') as $namespace => $path )
+        {
+            foreach ( (array)$path as $pathChoice )
+            {
+                if ( realpath(app_path()) == realpath(base_path() . '/' . $pathChoice) )
+                {
+                    return $this->namespace = $namespace;
+                }
+            }
+        }
+
+        throw new RuntimeException('Unable to detect application namespace.');
     }
 }

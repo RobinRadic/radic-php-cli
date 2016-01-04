@@ -1,6 +1,6 @@
 <?php
 
-namespace Radic\Cli\Foundation;
+namespace Radic\Foundation;
 
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;

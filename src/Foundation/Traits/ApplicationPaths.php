@@ -14,7 +14,7 @@ use Sebwite\Support\Path;
 /**
  * This is the class ApplicationPaths.
  *
- * @package        Radic\Cli
+ * @package        Radic
  * @author         Sebwite
  * @copyright      Copyright (c) 2015, Sebwite. All rights reserved
  * @mixin \Radic\Foundation\Application

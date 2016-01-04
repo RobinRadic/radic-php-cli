@@ -1,9 +1,8 @@
 <?php
 
 return [
-
+    'env' => env('APP_ENV', 'production'),
     'debug' => env('APP_DEBUG', false),
-
     'url' => env('APP_URL', 'http://localhost'),
 
     'timezone'        => 'UTC',
@@ -17,7 +16,7 @@ return [
 
     'providers' => [
         Radic\Foundation\Providers\ArtisanServiceProvider::class,
-        #Illuminate\Auth\AuthServiceProvider::class,
+        Illuminate\Auth\AuthServiceProvider::class,
         #Illuminate\Broadcasting\BroadcastServiceProvider::class,
         #Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
@@ -34,7 +33,7 @@ return [
         Illuminate\Pipeline\PipelineServiceProvider::class,
         #Illuminate\Queue\QueueServiceProvider::class,
         #Illuminate\Redis\RedisServiceProvider::class,
-        #Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         #Illuminate\Translation\TranslationServiceProvider::class,
         #Illuminate\Validation\ValidationServiceProvider::class,
@@ -42,6 +41,8 @@ return [
 
         Radic\Providers\ConsoleServiceProvider::class,
         Radic\Config\ConfigServiceProvider::class,
+        Radic\Providers\FirstRunServiceProvider::class,
+
         Radic\BladeExtensions\BladeExtensionsServiceProvider::class,
         Sebwite\Git\GitServiceProvider::class,
         Sebwite\Support\SupportServiceProvider::class,

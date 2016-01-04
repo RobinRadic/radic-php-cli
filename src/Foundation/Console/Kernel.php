@@ -50,6 +50,7 @@ class Kernel implements KernelContract
     protected $bootstrappers = [
         Bootstrap\DetectEnvironment::class,
 
+        Bootstrap\RemoveManifest::class,
         Bootstrap\EnsureDirectories::class,
         Bootstrap\ExportAppFolder::class,
         Bootstrap\LoadConfig::class,
@@ -189,7 +190,7 @@ class Kernel implements KernelContract
     public function queue($command, array $parameters = [ ])
     {
         $this->app[ 'Illuminate\Contracts\Queue\Queue' ]->push(
-            'Radic\Cli\Foundation\Console\QueuedJob', func_get_args()
+            'Radic\Foundation\Console\QueuedJob', func_get_args()
         );
     }
 

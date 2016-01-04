@@ -3,6 +3,7 @@
 namespace Radic\Providers;
 
 use Sebwite\Support\ServiceProvider;
+use Sebwite\Support\Str;
 
 /**
  * This is the ConsoleServiceProvider.
@@ -20,16 +21,10 @@ class FirstRunServiceProvider extends ServiceProvider
         $c = app()->config;
         $firstRun = $c->get('first_run', true) === true;
 
-        $config = [
-            'app.key' => $this->getRandomKey($c->get('app.cipher')),
-            'sebwite.git.default' => 'bitbucket',
-            'sebwite.git.connections.github.credentials.1' => '',
-            'sebwite.git.connections.github.repository' => '',
-            'sebwite.git.connections.bitbucket.credentials.key' => '',
-            'sebwite.git.connections.bitbucket.credentials.secret' => '',
-            'sebwite.git.connections.bitbucket.repository' => ''
-        ];
-
+        if($firstRun)
+        {
+           # artisan('first-run');
+        }
         #$this->app->make('artisan')
 
         //if($config)
