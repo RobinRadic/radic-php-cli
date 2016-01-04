@@ -1,0 +1,8 @@
+[
+    {
+        "name": "radic.phar",
+        "sha1": "SHA",
+        "url": "http://robinradic.github.io/radic-php-cli/downloads/radic-VERSION.phar",
+        "version": "VERSION"
+    }
+]

@@ -1,0 +1,81 @@
+<project name="radic" default="pre-commit">
+
+    <property name="buildfile-version" value="1.0.0"/>
+    <property name="vendordir" value="${project.basedir}/../../../vendor"/>
+    <property name="toolsdir" value=""/>
+    <property name="install-dir" value="/usr/local/bin"/>
+
+    <target name="clean" unless="clean.done" description="Cleanup build artifacts">
+        <delete file="${project.basedir}/composer.lock"/>
+        <property name="clean.done" value="true"/>
+    </target>
+
+    <target name="pre-commit" unless="pre-commit.done" depends="clean" description="Prepare for build">
+        <phingcall target="lint"/>
+        <phingcall target="phpcs"/>
+        <property name="pre-commit.done" value="true"/>
+    </target>
+
+    <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l"/>
+
+            <fileset dir="${project.basedir}/src" >
+                <include name="**/*.php"/>
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="phpcbf" description="Fixes coding standard violations using PHP_CodeSniffer Fixer">
+        <exec executable="${toolsdir}phpcbf" logoutput="true">
+            <arg value="--tabWidth=4"/>
+            <arg value="--standard=PSR2"/>
+            <arg value="--extensions=php"/>
+            <arg value="--ignore=autoload.php"/>
+            <arg path="${project.basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="phpcs" depends="phpcbf" description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="${toolsdir}phpcs" logoutput="true">
+            <arg value="--standard=PSR2"/>
+            <arg value="--extensions=php"/>
+            <arg value="--ignore=autoload.php"/>
+            <arg path="${project.basedir}/src"/>
+        </exec>
+    </target>
+
+    <target name="phpunit" description="Run unit tests with PHPUnit">
+        <exec executable="${toolsdir}phpunit" logoutput="true">
+            <arg value="--configuration"/>
+            <arg path="${project.basedir}/phpunit.xml"/>
+        </exec>
+    </target>
+
+    <target name="install-pear-dependencies">
+        <exec command="sudo pear install channel://pear.php.net/VersionControl_Git-0.4.4" />
+    </target>
+
+    <target name="build" description="Builds the radic phar, chmods it and renames it to radic">
+        <echo message="Building the PHAR archive, this might take a while..." />
+        <delete file="radic.phar" quiet="true" />
+        <exec executable="${toolsdir}box" dir="${project.basedir}" logoutput="true">
+            <arg value="build"/>
+        </exec>
+        <exec command="chmod +x radic.phar" />
+        <echo message="PHAR archive [radic.phar] created." />
+    </target>
+
+    <target name="install-boxer" description="Installs box2, the phar creation tool">
+        <echo message="Installing box2, this might take a while..." />
+        <exec command="curl -LSs https://box-project.github.io/box2/installer.php | php" />
+        <exec command="chmod +x box.phar" />
+        <exec command="sudo mv -f box.phar ${install-dir}/box" />
+        <echo message="box2 installed into ${install-dir}. You can now globally call the 'box' command." />
+    </target>
+
+    <target name="dist" description="Distributes a new version of the project">
+
+
+    </target>
+</project>

@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+
+$sep = DIRECTORY_SEPARATOR;
+$dir = __DIR__;
+require "{$dir}{$sep}..{$sep}src{$sep}boot-cli.php";
+
