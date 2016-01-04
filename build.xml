@@ -3,7 +3,9 @@
     <property name="buildfile-version" value="1.0.0"/>
     <property name="vendordir" value="${project.basedir}/../../../vendor"/>
     <property name="toolsdir" value=""/>
-    <property name="install-dir" value="/usr/local/bin"/>
+
+    <property name="phar.install-dir" value="/usr/local/bin"/>
+    <property name="phar.bin" value="radic"/>
 
     <target name="clean" unless="clean.done" description="Cleanup build artifacts">
         <delete file="${project.basedir}/composer.lock"/>
@@ -56,25 +58,26 @@
         <exec command="sudo pear install channel://pear.php.net/VersionControl_Git-0.4.4" />
     </target>
 
-    <target name="build" description="Builds the radic phar, chmods it and renames it to radic">
+    <target name="build" description="Builds the ${phar.bin}.phar, chmods it and renames it to ${phar.bin}">
         <echo message="Building the PHAR archive, this might take a while..." />
-        <delete file="radic.phar" quiet="true" />
+        <delete file="${phar.bin}.phar" quiet="true" />
         <exec executable="${toolsdir}box" dir="${project.basedir}" logoutput="true">
             <arg value="build"/>
         </exec>
-        <exec command="chmod +x radic.phar" />
-        <echo message="PHAR archive [radic.phar] created." />
+        <exec command="chmod +x ${phar.bin}.phar" />
+        <echo message="PHAR archive [${phar.bin}.phar] created." />
     </target>
 
     <target name="install-boxer" description="Installs box2, the phar creation tool">
         <echo message="Installing box2, this might take a while..." />
         <exec command="curl -LSs https://box-project.github.io/box2/installer.php | php" />
         <exec command="chmod +x box.phar" />
-        <exec command="sudo mv -f box.phar ${install-dir}/box" />
-        <echo message="box2 installed into ${install-dir}. You can now globally call the 'box' command." />
+        <exec command="sudo mv -f box.phar ${phar.install-dir}/box" />
+        <echo message="box2 installed into ${phar.install-dir}. You can now globally call the 'box' command." />
     </target>
 
     <target name="dist" description="Distributes a new version of the project">
+
 
 
     </target>

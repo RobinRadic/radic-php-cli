@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e40d952f610ada458c7e4d46476f799b",
-    "content-hash": "28d8e9eecbe8cd3b1240ef23cdb0392d",
+    "hash": "23d91e2a43a3173cea496ddb9b70f8b9",
+    "content-hash": "b18e648d96358b84307e0a0534d02303",
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -1909,6 +1909,60 @@
             "time": "2015-06-25 17:26:56"
         },
         {
+            "name": "laravelcollective/html",
+            "version": "v5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/html.git",
+                "reference": "5a8f1380a0d5ef21cdef37e775d86566307f8358"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/html/zipball/5a8f1380a0d5ef21cdef37e775d86566307f8358",
+                "reference": "5a8f1380a0d5ef21cdef37e775d86566307f8358",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "5.2.*",
+                "illuminate/routing": "5.2.*",
+                "illuminate/session": "5.2.*",
+                "illuminate/support": "5.2.*",
+                "illuminate/view": "5.2.*",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "illuminate/database": "5.2.*",
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Collective\\Html\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                },
+                {
+                    "name": "Adam Engebretson",
+                    "email": "adam@laravelcollective.com"
+                }
+            ],
+            "description": "HTML and Form Builders for the Laravel Framework",
+            "homepage": "http://laravelcollective.com",
+            "time": "2015-12-23 07:46:46"
+        },
+        {
             "name": "league/flysystem",
             "version": "1.0.16",
             "source": {
@@ -2502,16 +2556,16 @@
         },
         {
             "name": "sebwite/support",
-            "version": "1.0.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/sebwitepackages/sebwite-support.git",
-                "reference": "f731cbdf8f7c608fd79c6373b5e50c4c9efdfd9e"
+                "reference": "3d29777356ba79548ac9b7957ac1c9eb99559926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/sebwitepackages/sebwite-support/get/f731cbdf8f7c608fd79c6373b5e50c4c9efdfd9e.zip",
-                "reference": "f731cbdf8f7c608fd79c6373b5e50c4c9efdfd9e",
+                "url": "https://bitbucket.org/sebwitepackages/sebwite-support/get/3d29777356ba79548ac9b7957ac1c9eb99559926.zip",
+                "reference": "3d29777356ba79548ac9b7957ac1c9eb99559926",
                 "shasum": ""
             },
             "require": {
@@ -2522,6 +2576,7 @@
                 "illuminate/console": "~5.1",
                 "illuminate/filesystem": "~5.1",
                 "illuminate/support": "~5.1",
+                "laravelcollective/html": "~5.1",
                 "php": ">=5.5.9",
                 "symfony/filesystem": "~2.7",
                 "webmozart/path-util": "~1.0"
@@ -2558,7 +2613,7 @@
                 "structure",
                 "support"
             ],
-            "time": "2015-12-28 19:20:17"
+            "time": "2016-01-04 01:43:10"
         },
         {
             "name": "seld/jsonlint",
@@ -3678,6 +3733,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "sebwite/support": 20,
         "sebwite/git": 20,
         "sebwite/phpstorm": 20
     },

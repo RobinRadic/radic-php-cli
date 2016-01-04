@@ -16,6 +16,11 @@ $app->singleton(
 );
 
 $app->singleton(
+    \Illuminate\Contracts\Http\Kernel::class,
+    \Radic\Foundation\Http\Kernel::class
+);
+
+$app->singleton(
     \Illuminate\Contracts\Debug\ExceptionHandler::class,
     \Radic\Exceptions\Handler::class
 );
