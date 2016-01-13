@@ -39,6 +39,7 @@ return [
         #Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
         Radic\Providers\ConsoleServiceProvider::class,
         Radic\Config\ConfigServiceProvider::class,
         Radic\Providers\FirstRunServiceProvider::class,

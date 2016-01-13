@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
-class HandleExceptions
+class HandleExceptions implements HandleExceptionsInterface
 {
     /**
      * The application instance.
