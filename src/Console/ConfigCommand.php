@@ -6,12 +6,12 @@
  */
 
 
-namespace Radic\Console\Config;
+namespace Radic\Console;
 
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigCommand extends \Radic\Console\Command
+class ConfigCommand extends Command
 {
 
     protected $signature = 'config
@@ -36,6 +36,19 @@ class ConfigCommand extends \Radic\Console\Command
 
     protected function editConfig($key, $val)
     {
+        if ( is_numeric($val) )
+        {
+            $val = (int)$val;
+        }
+        if ( $val === 'true' || $val === 'false' )
+        {
+            $val = $val === 'true';
+        }
+        if ( $val === 'null' )
+        {
+            $val = null;
+        }
+
         app()->config->persist($key, $val);
         $this->comment("Changed [{$key}] to [{$val}] and saved to database");
     }

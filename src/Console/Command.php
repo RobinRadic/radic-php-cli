@@ -6,7 +6,7 @@ namespace Radic\Console;
 
 
 
-abstract class Command extends \Sebwite\Support\Command
+abstract class Command extends \Sebwite\Support\Console\Command
 {
 
     public function __construct()
